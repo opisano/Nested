@@ -468,9 +468,27 @@ private:
     /// stack pointer
     ubyte sp;
     
-    /// used to signal that last instruction crossed pages boundaries
+    /// signals that last instruction crossed pages boundaries
     bool boundary_crossed;
-    
+
+    /// signal that an IRQ occured
+    bool irq;
+
+    /// signal that a reset interrupt occured
+    bool reset;
+
+    /// signal that a NMI occured
+    bool nmi;
+
+    /** Signals that the CPU was interrupted. Can be caused by:
+     *   - Reset interrupt occured.
+     *   - NMI occured.
+     *   - IRQ occured while the interrupt disable flag is clear.
+     */
+    bool interrupted() const nothrow
+    {
+        return (reset || nmi || (irq && !(flags & INTERRUPT)));
+    }
     
 public:
 
@@ -493,8 +511,47 @@ public:
         }
         else
         {
-            ubyte opcode = read_mem();
-            decode(opcode);
+            if (!interrupted()) // normal execution
+            {
+                ubyte opcode = read_mem();
+                decode(opcode);
+            }
+            else // CPU was interrupted
+            {
+                // push the program courter 
+                memory[0x0100 | sp--] = pc & 0xFF;
+                memory[0x0100 | sp--] = (pc >> 8) & 0xFF;
+
+                // push status register onto the stack
+                php();
+
+                // Set the interrupt disable flag
+                sei();
+
+                ushort addr;
+                if (reset)
+                {
+                    reset = false;
+                    addr = memory[0xFFFC];
+                    addr |= (memory[0xFFFD] << 8);
+                }
+                else if (nmi)
+                {
+                    nmi = false;
+                    addr = memory[0xFFFA];
+                    addr |= (memory[0xFFFB] << 8);
+                }
+                else // irq
+                {
+                    irq = false;
+                    addr = memory[0xFFFF];
+                    addr |= (memory[0xFFFE] << 8);
+                }
+
+                // Load the address of the interrupt handling routine
+                jmp(addr);
+                cycles = 7;
+            }
         }
     }
 
