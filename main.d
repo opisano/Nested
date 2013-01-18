@@ -3,12 +3,13 @@ module main;
 import std.conv;
 import std.stdio;
 
-import controller;
+import console;
 import file.ines;
 import file.rom;
 import graphics.init;
 
 import derelict.sdl.sdl;
+
 
 /**
  * This class handles application events. 
@@ -16,9 +17,10 @@ import derelict.sdl.sdl;
 final class Application
 {
     Display display;
-    ControllerState ctrlState;
-    Joystick joystick;
+    Console console;
+    
     bool active;
+    bool emulationActive;
     
     /** Draws the screen */
     void render()
@@ -36,24 +38,15 @@ final class Application
                 break;
                 
             case SDL_JOYAXISMOTION:
-                if (joystick)
-                {
-                    joystick.handleAxisEvent(event);
-                }
+                console.handleJoystickAxisEvent(event);
                 break;
                 
             case SDL_JOYBUTTONDOWN:
-                if (joystick)
-                {
-                    joystick.handleButtonDownEvent(event);
-                }
+                console.handleJoystickButtonDownEvent(event);
                 break;
                 
             case SDL_JOYBUTTONUP:
-                if (joystick)
-                {
-                    joystick.handleButtonUpEvent(event);
-                }
+                console.handleJoystickButtonUpEvent(event);
                 break;
                 
             default:
@@ -74,12 +67,10 @@ public:
     body
     {
         display = new Display(1);
-        if (Joystick.getJoystickCount() > 0)
-        {
-            SDL_JoystickEventState(SDL_ENABLE);
-            joystick = new Joystick(0, &ctrlState);
-        }
-        active  = false;
+        
+
+        active = false;
+        emulationActive = false;
     }
 
     /** Application main loop. Handles events. */
@@ -118,9 +109,6 @@ public:
     {
         if (display)
             display.cleanup();
-        
-        if (joystick)
-            joystick.cleanup();
         
         SDL_Quit();
     }

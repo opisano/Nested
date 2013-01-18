@@ -1,5 +1,5 @@
 /*------------------------------------------------------------------------------
-    Copyright© 2010 Olivier Pisano
+    Copyright© 2010-2013 Olivier Pisano
 
     This file is part of Nested.
 
@@ -499,8 +499,17 @@ public:
     }
     body
     {
-        memory = new CPUMemoryMap(ppu);
+        memory = new CPUMemoryMap(this, ppu);
 		initDecoding();
+    }
+
+    /**
+     * Signal to the cpu the memory bus is busy doing a 
+     * memory -> ppu DMA transfert operation
+     */
+    void dmaOccured()
+    {
+        cycles = 512;
     }
     
     void clock()

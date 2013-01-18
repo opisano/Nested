@@ -1,5 +1,5 @@
 /*------------------------------------------------------------------------------
-    Copyright© 2010 Olivier Pisano    
+    Copyright© 2010-2013 Olivier Pisano    
     
     This file is part of Nested.
 
@@ -19,6 +19,7 @@
 
 module memory;
 
+import cpu;
 import ppu;
 import controller;
 
@@ -47,15 +48,17 @@ private:
     ubyte[0x8000] prgRom;
     
     PPU ppu;
+    CPU cpu;
     
 public:
     
     ControllerState controller1;
     ControllerState controller2;
     
-    this(PPU a_ppu)
+    this(CPU a_cpu, PPU a_ppu)
     {
         ppu = a_ppu;
+        cpu = a_cpu;
     }
     
     ubyte opIndex(size_t index)
@@ -73,10 +76,13 @@ public:
         // if adress is in the PPU registers
         else if (index >= PPU_REGISTERS && index < APU_REGISTERS)
         {
-            switch (index % 8)
+            switch (index & 7)
              {   
              case 2:
                  return ppu.status();
+
+             case 7:
+                 return ppu.memoryData();
                  
              
              default:
@@ -124,10 +130,52 @@ public:
         {
             return memory[index % MEMORY_SIZE] = value;
         }
+        // if adress is in the PPU registers
+        else if (index >= PPU_REGISTERS && index < APU_REGISTERS)
+        {
+            switch (index & 7)
+            {
+            case 0:
+                ppu.control(value);
+                return value;
+
+            case 1:
+                ppu.mask(value);
+                return value;
+
+            case 3:
+                return ppu.spriteRAMAddress(value);
+
+            case 4:
+                return ppu.spriteRAMValue(value);
+
+            case 5:
+                return ppu.scroll(value);
+
+            case 6:
+                return ppu.memoryAddress(value);
+
+            case 7:
+                return ppu.memoryData(value);
+
+            default:
+                throw new Exception("Unknown PPU register access");
+            }
+        }
         else if (index >= APU_REGISTERS && index < CARTRIDGE_EX)
         {
             switch (index)
             {
+            case 0x4014:
+                {
+                    size_t addr = value << 8;
+                    for (size_t offset = 0; offset < 0xFF; ++offset)
+                    {
+                        ppu.writeSpriteRam(this[addr+offset], offset);
+                    }
+                    cpu.dmaOccured();
+                }
+                return value;
             case 0x4016:
                 controller1.write(value);
                 return value;

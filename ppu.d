@@ -1,5 +1,5 @@
 /*------------------------------------------------------------------------------
-    Copyright© 2010 Olivier Pisano
+    Copyright© 2010-2013 Olivier Pisano
 
     This file is part of Nested.
 
@@ -218,14 +218,6 @@ body
     }
 }
 
-void attributeTableAccess(ubyte tableValue, out ubyte[4] tiles)
-{
-    tiles[0] = tableValue & 0b0000_0011;
-    tiles[1] = (tableValue & 0b0000_1100) >> 2;
-    tiles[2] = (tableValue & 0b0011_0000) >> 4;
-    tiles[3] = (tableValue & 0b1100_0000) >> 6;
-}
-
 unittest
 {
     ubyte[16] patterns = [  0b00010000,
@@ -260,6 +252,13 @@ unittest
     assert(ub == expected);
 }
 
+void attributeTableAccess(ubyte tableValue, out ubyte[4] tiles)
+{
+    tiles[0] = tableValue & 0b0000_0011;
+    tiles[1] = (tableValue & 0b0000_1100) >> 2;
+    tiles[2] = (tableValue & 0b0011_0000) >> 4;
+    tiles[3] = (tableValue & 0b1100_0000) >> 6;
+}
 
 /**
  * Modelizes the Picture Processing Unit of the NES
@@ -273,6 +272,7 @@ private:
     ubyte[0x20]   m_palette;
     ubyte[0x100]  m_spriteRAM;
 
+    ubyte m_spriteRAMAddress;
 
     static immutable nametableAdresses = [0x2000, 0x2400, 0x2800, 0x2C00];
     
@@ -287,18 +287,17 @@ private:
     size_t bgPatternTableAddress;
     
     SpriteSize spriteSize;
-    
-    bool verticalBlankNMIGeneration;    
 
     TableMirroring mirroring;
+    
+    bool verticalBlankNMIGeneration;        
     
 public:
 
     ubyte opIndex(size_t index) const
     {
         // global mirroring
-        if (index >= 0x4000)
-            index %= 0x4000;
+        index &= 0x3FFF; //index %= 0x4000;
 
         // name table mirroring
         if (index.between(0x3000, 0x3F00))
@@ -309,7 +308,7 @@ public:
         else if (index.between(0x3F20, 0x4000))
         {
             size_t offset = 0x3F20 - index;
-            offset %= 0x20;
+            offset &= 0x1F;
             index = 0x3F00 + offset;
         }
 
@@ -366,6 +365,80 @@ public:
 
         return 0;
     }
+
+    ubyte opIndexAssign(ubyte value, size_t index)
+    {
+        // global mirroring
+        index &= 0x3FFF; //index %= 0x4000;
+
+        // name table mirroring
+        if (index.between(0x3000, 0x3F00))
+        {
+            index -= 0x1000;
+        }
+        // palette mirroring
+        else if (index.between(0x3F20, 0x4000))
+        {
+            size_t offset = 0x3F20 - index;
+            offset &= 0x1F;
+            index = 0x3F00 + offset;
+        }
+
+        // Access to pattern tables
+        if (index < 0x2000)
+            return m_patternTables[index] = value;
+
+
+        // Access to name/attribute tables
+        if (index.between(0x2000, 0x3000))
+        {
+            final switch (mirroring)
+            {
+                case TableMirroring.HORIZONTAL:
+                    if (index.between(0x2000, 0x2800)) // Access Table 1
+                    {
+                        int offset = index - 0x2000;
+                        // suppress mirroring
+                        offset = offset > 0x400 ? (offset - 0x400) : offset;
+                        return m_nameAttrTable1[offset] = value;
+                    }
+                    else // Access Table 2
+                    {
+                        int offset = index - 0x2800;
+                        // suppress mirroring
+                        offset = offset > 0x400 ? (offset - 0x400) : offset;
+                        return m_nameAttrTable2[offset] = value;
+                    }
+                case TableMirroring.VERTICAL:
+                    // suppress mirroring
+                    index = index > 0x2800 ? (index - 0x800) : index;
+                    if (index.between(0x2000, 0x2400)) // Access Table 1
+                    {
+                        return m_nameAttrTable1[index-0x2000] = value;
+                    }
+                    else // Access Table 2
+                    {
+                        return m_nameAttrTable2[index-0x2400] = value;
+                    }
+
+                case TableMirroring.SINGLE_SCREEN:
+                    while (index >= 0x2400)
+                    {
+                        index -= 0x400;
+                    }
+                    return m_nameAttrTable1[index-0x2000] = value;
+
+                case TableMirroring.FOUR_SCREEN:
+                    return 0; // Not implemented yet
+            }            
+        }
+
+        if (index.between(0x3F00, 0x3F20))
+            return m_palette[index - 0x3F00] = value;
+
+        return 0;
+
+    }
     
     /**
      * PPU control (write)
@@ -411,6 +484,12 @@ public:
     bool intensifyGreens;
     
     bool intensifyBlues;
+
+    ubyte verticalScroll;
+
+    ubyte horizontalScroll;
+
+    ushort vramAddress;
 
     /**
      * Mask
@@ -476,16 +555,118 @@ public:
         
         return value;
     }
-    
-    ubyte oamAddress;
-    
-    ubyte oamData;
-    
-    ubyte scroll;
-    
-    ubyte address;
-    
-    ubyte data;
+
+    /**
+     * 0x2003.
+     * Sets the address in SPR-RAM to access on the next write to 0x2004.
+     */
+    ubyte spriteRAMAddress(ubyte value)
+    {
+        // lastWritten = value; ?
+        return m_spriteRAMAddress = value;
+    }
+
+    /**
+     * 0x2004.
+     * Writes a byte in SPR-RAM at the address indicated by 0x2003.
+     */
+    ubyte spriteRAMValue(ubyte value)
+    {
+        // lastWritten = value; ?
+        return m_spriteRAM[m_spriteRAMAddress] = value;
+    }
+
+    /**
+     * 0x2005.
+     * There are two scroll registers, vertical and horizontal, 
+     * which are both written via this port. The first value written
+     * will go into the Vertical Scroll Register (unless it is >239,
+     * then it will be ignored). The second value will appear in the
+     * Horizontal Scroll Register. Name Tables are assumed to be
+     * arranged in the following way:
+     *   +-----------+-----------+
+     *   | 2 ($2800) | 3 ($2C00) |
+     *   +-----------+-----------+
+     *   | 0 ($2000) | 1 ($2400) |
+     *   +-----------+-----------+
+     * When scrolled, the picture may span over several Name Tables.
+     * Remember that because of the mirroring there are only 2 real
+     * Name Tables, not 4. 
+     */
+    ubyte scroll(ubyte value)
+    {
+        // identifies wether the write concerns the vertical or horizontal 
+        // scroll register
+        static bool horizontal = false;
+
+        if (!horizontal && value > 239)
+        {
+            verticalScroll = value;
+            horizontal = !horizontal;
+        }
+        else
+        {
+            horizontalScroll = value;
+            horizontal = !horizontal;
+        }
+
+        return value;
+    }
+
+    /**
+     * 0x2006.
+     * Used to set the address of PPU Memory to be accessed via
+     * $2007. The first write to this register will set 8 lower
+     * address bits. The second write will set 6 upper bits. The
+     * address will increment either by 1 or by 32 after each
+     * access to $2007 (see "PPU Memory").
+     */
+    ubyte memoryAddress(ubyte value)
+    {
+        // indentifies wether the write concerns lower or upper bits
+        static bool upperBits = false;
+
+        if (!upperBits)
+        {
+            vramAddress = (vramAddress & 0xFF00) | value;
+        }
+        else
+        {
+            vramAddress = (vramAddress & 0xFF) | ((value & 0x3F) << 8);
+        }
+
+        return value;
+    }
+
+    /**
+     * 0x2007
+     * Used to read the PPU Memory. The address is set via
+     * $2006 and increments after each access, either by 1 or by 32
+
+     */
+    ubyte memoryData()
+    {
+        ubyte b = this[vramAddress];
+        vramAddress += vramAddressIncrement;
+        return b;
+    }
+
+    /**
+    * 0x2007
+    * Used to write the PPU Memory. The address is set via
+    * $2006 and increments after each access, either by 1 or by 32
+    */
+    ubyte memoryData(ubyte value)
+    {
+        this[vramAddress] = value;
+        vramAddress += vramAddressIncrement;
+        return value;
+    }    
+
+    void writeSpriteRam(ubyte value, size_t address)
+    {
+        m_spriteRAM[address] = value;
+    }
     
     void draw(ref SDL_Surface display)
     in
