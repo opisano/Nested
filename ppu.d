@@ -22,67 +22,12 @@ module ppu;
 import derelict.sdl.sdl;
 import core.bitop;
 
-/**
- * The tile is the base unit in NES graphics. 
- * It is an 8x8 image whose pixels are coded by two bits.
- * First pixels is coded in the first 8 bytes while the second is coded in the 
- * next eight bytes.
- */
-struct Tile
-{
-private:
-    static immutable uint[8] tile_mask = [128, 64, 32, 16, 8, 4, 2, 1];
+enum TILES_PER_ROW      = 32;
+enum TILES_PER_COL      = 30;
+enum PATTERN_TILE_SIZE  = 16;
 
-    /** Pixel data */
-    ubyte[16] m_data; 
-    
-public:
-    /** Read access to the pixels */
-    ubyte opIndex(size_t y, size_t x) const
-    in
-    {
-        assert (y < 8);
-        assert (x < 8);
-    }
-    out (result)
-    {
-        assert (result < 4);
-    }
-    body
-    {
-        ubyte value = m_data[x] & tile_mask[y] ? 1 : 0;
-        value |= (m_data[8+x] & tile_mask[y] ? 1 : 0) << 1;
-        
-        return value;
-    }
-    
-    /** Write access to the pixels */
-    ubyte opIndexAssign(uint value, size_t y, size_t x)
-    in
-    {
-        assert (y < 8);
-        assert (x < 8);
-    }
-    out (result)
-    {
-        assert (result < 4);
-    }
-    body
-    {
-        value &= 0b0000_0011;
-        if (value & 0b0000_0001)
-            m_data[x] |= tile_mask[y];
-        else
-            m_data[x] &= ~(tile_mask[y]);
-        
-        if (value & 0b0000_0010)
-            m_data[8+x] |= tile_mask[y];
-        else
-            m_data[8+x] &= ~(tile_mask[y]);
-        
-        return cast(ubyte) value;
-    }
-}
+enum ATTR_TABLE_INDEX = buildAttrTableIndex();
+
 
 struct OAM
 {
@@ -119,23 +64,6 @@ struct OAM
     bool isPrioritary() nothrow { return (attributes & 0b0010_0000) != 0; }
 }
 
-unittest
-{
-    assert (Tile.sizeof == 16);
-    Tile t;
-    foreach (x; 0..8)
-    {
-        foreach(y; 0..8)
-        {
-            foreach (m; 0..4)
-            {
-                t[x, y] = m;
-                assert (t[x, y] == m);
-            }
-        }
-    }
-}
-
 enum SpriteSize
 {
     SINGLE,
@@ -152,27 +80,27 @@ bool between(uint value, uint lower, uint upper) pure nothrow
 
 uint hsvToRgb(ubyte hsv) pure nothrow
 {
-    // correspondance between NES palette index and RRGGBB values
+    // correspondance between NES palette index and BBGGRR values
     static immutable uint[64] COLORS = [
-        0x788084, 0x0000fc, 0x0000c4, 0x4028c4,
-        0x94008c, 0xac0028, 0xac1000, 0x8c1800,
-        0x503000, 0x007800, 0x006800, 0x005800,
-        0x004058, 0x000000, 0x000000, 0x000008,
+        0x848078, 0xfc0000, 0xc40000, 0xc42840,
+        0x8c0094, 0x2800ac, 0x0010ac, 0x00188c,
+        0x003050, 0x007800, 0x006800, 0x005800,
+        0x584000, 0x000000, 0x000000, 0x080000,
 
-        0xbcc0c4, 0x0078fc, 0x0088fc, 0x6848fc,
-        0xdc00d4, 0xe40060, 0xfc3800, 0xe46018,
-        0xac8000, 0x00b800, 0x00a800, 0x00a848,
-        0x008894, 0x2c2c2c, 0x000000, 0x000000, 
+        0xc4c0bc, 0xfc7800, 0xfc8800, 0xfc4868,
+        0xd400dc, 0x6000e4, 0x0038fc, 0x1860e4,
+        0x0080ac, 0x00b800, 0x00a800, 0x48a800,
+        0x948800, 0x2c2c2c, 0x000000, 0x000000, 
 
-        0xfcf8fc, 0x38c0fc, 0x6888fc, 0x6848fc,
-        0xfc78fc, 0xfc589c, 0xfc7858, 0xfca048,
-        0xfcb800, 0xbcf818, 0x58d858, 0x58f89c,
-        0x00e8e4, 0x606060, 0x000000, 0x000000,
+        0xfcf8fc, 0xfcc038, 0xfc8868, 0xfc4868,
+        0xfc78fc, 0x9c58fc, 0x5878fc, 0x48a0fc,
+        0x00b8fc, 0x18f8bc, 0x58d858, 0x9cf858,
+        0xe4e800, 0x606060, 0x000000, 0x000000,
 
-        0xfcf8fc, 0xa4e8fc, 0xbcb8fc, 0xdcb8fc,
-        0xfcb8fc, 0xf4c0e0, 0xf4d0b4, 0xfce0b4,
-        0xfcd884, 0xdcf878, 0xb8f878, 0xb0f0d8,
-        0x00f8fc, 0xc8c0c0, 0x000000, 0x000000
+        0xfcf8fc, 0xfce8a4, 0xfcb8bc, 0xfcb8dc,
+        0xfcb8fc, 0xe0c0f4, 0xb4d0f4, 0xb4e0fc,
+        0x84d8fc, 0x78f8dc, 0x78f8b8, 0xd8f0b0,
+        0xfcf800, 0xc0c0c8, 0x000000, 0x000000
     ];
 
     return COLORS[hsv & 0b0011_1111];
@@ -186,17 +114,42 @@ enum TableMirroring
     FOUR_SCREEN
 }
 
+ubyte[960] buildAttrTableIndex()
+{
+    ubyte[960] t;
+
+    foreach (j; 0..TILES_PER_COL)
+    {
+        foreach (i; 0..TILES_PER_ROW)
+        {
+            auto index = j * TILES_PER_ROW + i;
+            t[index] = cast(ubyte)((i / 4) % (TILES_PER_ROW/4) + (index / TILES_PER_ROW*4)*8);
+        }
+    }
+
+    return t;
+}
+
 /**
 * Performs a read in a pattern table and returns a 8x8 tile where each pixel 
 * least significant two bits are filled.
+* @param memory 16 bytes chunk from pattren table memory
+* @param tile a 8x8 memory block 
 */
-void patternTableAccess(ubyte[] memory, out ubyte[64] tile)
+void patternTableAccess(const ubyte[] memory, out ubyte[64] tile)
 in
 {
     assert (memory.length == 16);
 }
+out
+{
+    // check only the 2 least significant bits are set
+    foreach (b; tile)
+        assert (b < 4);
+}
 body
 {
+    // test a bit
     uint BT(uint* p, size_t bitnum)
     {
         return bt(p, bitnum) ? 1 : 0;
@@ -252,12 +205,45 @@ unittest
     assert(ub == expected);
 }
 
-void attributeTableAccess(ubyte tableValue, out ubyte[4] tiles)
+
+
+
+ubyte attributeTableAccess(const ubyte[] attrTable, size_t xTile, size_t yTile)
+in
 {
-    tiles[0] = tableValue & 0b0000_0011;
-    tiles[1] = (tableValue & 0b0000_1100) >> 2;
-    tiles[2] = (tableValue & 0b0011_0000) >> 4;
-    tiles[3] = (tableValue & 0b1100_0000) >> 6;
+    assert (attrTable.length == 64);
+    assert (xTile < 32);
+    assert (yTile < 30);
+}
+out (result)
+{
+    assert (result < 4);
+}
+body
+{
+    enum SQUARES = [0, 0, 1, 1,
+                    0, 0, 1, 1,
+                    2, 2, 3, 3,
+                    2, 2, 3, 3];
+
+    size_t indexTile = yTile * TILES_PER_ROW + xTile;
+    size_t indexAttr = ATTR_TABLE_INDEX[indexTile];
+
+    ubyte attrValue = attrTable[indexAttr];
+    xTile &= 3;
+    yTile &= 3;
+
+    final switch(SQUARES[yTile*4+xTile])
+    {
+    case 0:
+        return attrValue & 0b0000_0011;
+    case 1:
+        return (attrValue & 0b0000_1100) >> 2;
+    case 2:
+        return (attrValue & 0b0011_0000) >> 4;
+    case 3:
+        return (attrValue & 0b1100_0000) >> 6;
+    }
 }
 
 /**
@@ -290,9 +276,113 @@ private:
 
     TableMirroring mirroring;
     
-    bool verticalBlankNMIGeneration;        
+    bool verticalBlankNMIGeneration;
+
+    SDL_Surface* bg0;
+
+    SDL_Surface* bg1;
+
+    SDL_Surface* sdlTile;
+
+    void drawNameTable(const ubyte[] nameTable, SDL_Surface* bg)
+    in
+    {
+        assert (nameTable !is null);
+        assert (bg !is null);
+        assert (nameTable.length == 1024);
+    }
+    body
+    {
+        for (size_t y = 0; y < TILES_PER_COL; ++y)
+        {
+            ubyte msb;
+            for (size_t x = 0; x < TILES_PER_ROW; ++x)
+            {
+                ubyte[64] tile;
+
+                // Get address of tile in the pattern tables
+                size_t name_addr = (y * TILES_PER_ROW) + x;
+                size_t tile_addr = bgPatternTableAddress + nameTable[name_addr] * PATTERN_TILE_SIZE;
+                assert (tile_addr < 0x2000);
+
+                // Get two lower bits from the pattern tables
+                patternTableAccess(m_patternTables[tile_addr..tile_addr+16], tile);
+
+                // Get the upper bits from the attributes table
+                if ((x & 1 ) == 0)
+                    msb = cast(ubyte)(attributeTableAccess(nameTable[960..1024], x, y) << 2);
+                tile[] |= msb;
+
+                // Draw tile to SDL surface
+                SDL_LockSurface(bg);
+                foreach (offset; 0..64)
+                {
+                    (cast(uint*)(*sdlTile).pixels)[offset] = hsvToRgb(tile[offset]);
+                }
+                SDL_UnlockSurface(sdlTile);
+
+                // blit tile to background
+                SDL_Rect dstRect = {cast(short)(x * 8), cast(short)(y * 8), 8, 8};
+                SDL_BlitSurface(sdlTile, null, bg, &dstRect);
+            }
+        }
+    }
+
+    void drawBackground(ref SDL_Surface display)
+    {
+        drawNameTable(m_nameAttrTable1[], bg0);
+
+        if (mirroring == TableMirroring.SINGLE_SCREEN
+                || (horizontalScroll == 0 && verticalScroll == 0))
+        {
+            SDL_BlitSurface(bg0, null, &display, null);
+            return;
+        }
+        else
+        {
+            drawNameTable(m_nameAttrTable2[], bg1);
+            switch (mirroring)
+            {
+            case TableMirroring.HORIZONTAL:
+                {
+                    SDL_Rect dstRect = {cast(short)-horizontalScroll, cast(short)-verticalScroll};
+                    SDL_BlitSurface(bg0, null, &display, &dstRect);
+                    dstRect.x += 256;
+                    SDL_BlitSurface(bg0, null, &display, &dstRect);
+                    dstRect.y += 240;
+                    SDL_BlitSurface(bg1, null, &display, &dstRect);
+                    dstRect.x -= 256;
+                    SDL_BlitSurface(bg1, null, &display, &dstRect);
+                }
+            case TableMirroring.VERTICAL:
+                {
+                    SDL_Rect dstRect = {cast(short)-horizontalScroll, cast(short)-verticalScroll};
+                    SDL_BlitSurface(bg0, null, &display, &dstRect);
+                    dstRect.x += 256;
+                    SDL_BlitSurface(bg1, null, &display, &dstRect);
+                    dstRect.y += 240;
+                    SDL_BlitSurface(bg0, null, &display, &dstRect);
+                    dstRect.x -= 256;
+                    SDL_BlitSurface(bg1, null, &display, &dstRect);
+                }
+            default:
+                // not supported
+            }
+        }
+    }
+
+    void drawSprites(ref SDL_Surface display)
+    {
+
+    }
     
 public:
+
+    this()
+    {
+        bg0 = SDL_CreateRGBSurface(SDL_HWSURFACE, 256, 240, 32,
+                                   0xFF, 0xFF00, 0xFF0000, 0xFF000000);
+    }
 
     ubyte opIndex(size_t index) const
     {
@@ -676,6 +766,14 @@ public:
     }
     body
     {
-        
+        if (showBackground)
+        {
+            drawBackground(display);
+        }
+
+        if (showSprites)
+        {
+            drawSprites(display);
+        }
     }
 }

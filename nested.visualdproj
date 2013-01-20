@@ -196,6 +196,7 @@
   <File path="audio\lengthcounter.d" />
   <File path="main.d" />
   <File path="memory.d" />
+  <File path="mmc1.d" />
   <File path="audio\noise.d" />
   <File path="ppu.d" />
   <File path="file\rom.d" />
