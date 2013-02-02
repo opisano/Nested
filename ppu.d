@@ -117,22 +117,28 @@ private ubyte[960] buildAttrTableIndex()
 }
 
 /**
- * CTFE-only function that builds a bit to byte look up table that is used by SSE SIMD code 
+ * CTFE-only function that builds a bit to byte look up table 
  */
-private ushort[8][256] buildBitToByteTableIndex()
+private ulong[256] buildBitToByteTable()
 {
-    ushort[8][256] result;
+    ulong[256] result;
 
     foreach (num; 0..256)
     {
-        foreach (bit; 0..7)
+        ulong value;
+        foreach (bit; 0..8)
         {
-            ushort value = cast(ushort) (num & (1 << bit)) >> bit;
-            result[7-bit][num] = value;
+            ulong bitvalue = (num & (1 << bit)) >> bit;
+            value |= (bitvalue << ((7-bit) *8));
         }
+        result[num] = value;
     }
     return result;
 }
+
+
+enum bitToByte = buildBitToByteTable();
+
 
 /**
 * Performs a read in a pattern table and returns a 8x8 tile where each pixel 
@@ -152,26 +158,14 @@ out
         assert (b < 4);
 }
 body
-{
-    // test a bit
-    uint BT(uint* p, size_t bitnum)
-    {
-        return bt(p, bitnum) ? 1 : 0;
-    }
-
+{    
     for (size_t i = 0; i < 8; ++i)
-    {
-        uint row1  = memory[i];
-        uint row2  = memory[i+8];
-
-        tile[i*8]   = cast(ubyte)(BT(&row1, 7) | (BT(&row2, 7) << 1)); 
-        tile[i*8+1] = cast(ubyte)(BT(&row1, 6) | (BT(&row2, 6) << 1));
-        tile[i*8+2] = cast(ubyte)(BT(&row1, 5) | (BT(&row2, 5) << 1));
-        tile[i*8+3] = cast(ubyte)(BT(&row1, 4) | (BT(&row2, 4) << 1));
-        tile[i*8+4] = cast(ubyte)(BT(&row1, 3) | (BT(&row2, 3) << 1));
-        tile[i*8+5] = cast(ubyte)(BT(&row1, 2) | (BT(&row2, 2) << 1));
-        tile[i*8+6] = cast(ubyte)(BT(&row1, 1) | (BT(&row2, 1) << 1));
-        tile[i*8+7] = cast(ubyte)(BT(&row1, 0) | (BT(&row2, 0) << 1));
+    {   
+        // Use lookup table to get byte equivalents to bits in memory[i]
+        auto row1 = bitToByte[memory[i]];
+        auto row2 = bitToByte[memory[i+8]];
+        void* presult = &tile[i*8];
+        *(cast(ulong*)presult) = row1 | (row2 << 1);
     }
 }
 
@@ -294,12 +288,11 @@ unittest
 void vflip(ref ubyte[64] tile) pure
 {
     auto original = tile.idup;
-    for (size_t x = 0; x < 8; ++x)
+    for (size_t line = 0; line < 8; ++line)
     {
-        for (size_t y = 0; y < 8; ++y)
-        {
-            tile[(7-y)*8+x] = original[y*8+x];
-        }
+        size_t tile_idx = line *8;
+        size_t orig_idx = (7-line)*8;
+        tile[tile_idx..tile_idx+8] = original[orig_idx..orig_idx+8];
     }
 }
 
