@@ -20,8 +20,8 @@
 module ppu;
 
 import derelict.sdl.sdl;
-import core.bitop;
-import core.simd;
+
+import std.algorithm;
 
 enum TILES_PER_ROW      = 32;
 enum TILES_PER_COL      = 30;
@@ -86,13 +86,6 @@ enum TableMirroring
     VERTICAL,
     SINGLE_SCREEN,
     FOUR_SCREEN
-}
-
-struct SpriteInfo
-{
-    ubyte left;
-    ubyte top;
-    bool  priority;
 }
 
 /**
@@ -320,6 +313,28 @@ unittest
     assert (original == expected);
 }
 
+struct SpriteInfo
+{    
+    bool        priority;
+    ubyte       index;
+    ubyte       left;
+    ubyte       top;
+
+    private int priorityScore() const
+    {
+        int score = priority ? -100 : 0;
+        score -= index;
+        return score;
+    }
+
+    int opCmp(const ref SpriteInfo other) const
+    {
+        return priorityScore() - other.priorityScore();
+    }
+}
+
+SpriteInfo[64] m_spriteinfos;
+
 /**
  * Modelizes the Picture Processing Unit of the NES
  */
@@ -473,12 +488,37 @@ private:
         }
     }
 
-    void drawSprites(ref SDL_Surface display)
+    size_t drawSprites(ref SDL_Surface display, size_t fromIndex, bool priority)
     {
+        ushort height = spriteSize == SpriteSize.SINGLE ? 8 : 16;
+        size_t i;
+        for (i = fromIndex; i < 64 && m_spriteinfos[i].priority == priority; ++i)
+        {
+            SDL_Rect srcRect, dstRect;
+
+            srcRect.x = m_spriteinfos[i].index * 8;
+            srcRect.y = 0;
+            srcRect.w = 8;
+            srcRect.h = height;
+
+            dstRect.x = m_spriteinfos[i].left;
+            dstRect.y = m_spriteinfos[i].top;
+
+            SDL_BlitSurface(sprites, &srcRect, &display, &dstRect);
+        }
+
+        return i;
+    }
+
+    void decodeSprites()
+    {
+        SpriteInfo* latest_priority;
+        SpriteInfo* latest_normal;
+
         if (spriteSize == SpriteSize.SINGLE)
         {
             // for each sprite in spriteRAM
-            for (size_t i = 60; i >= 0; i -= 4)
+            for (ubyte i = 60; i >= 0; i -= 4)
             {
                 ubyte[64] tile;
                 const oam = m_spriteRAM[i..i+4];
@@ -503,16 +543,23 @@ private:
                 // blit tile to sprite surface
                 SDL_Rect dstRect = {cast(short)(i*8), 0};
                 SDL_BlitSurface(sdlTile, null, sprites, &dstRect);
+
+                // decode sprite info
+                m_spriteinfos[i].priority = isOAMPrioritary(oam[2]);
+                m_spriteinfos[i].index    = i;
+                m_spriteinfos[i].left     = oam[3];
+                m_spriteinfos[i].top      = oam[0];
             }
         }
         else
         {
-            for (size_t i = 60; i >= 0; i -= 4)
+            for (ubyte i = 60; i >= 0; i -= 4)
             {
-                for (size_t j = 0; j < 2; ++j)
+                const oam = m_spriteRAM[i..i+4];
+
+                for (ubyte j = 0; j < 2; ++j)
                 {
-                    ubyte[64] tile;
-                    const oam = m_spriteRAM[i..i+4];
+                    ubyte[64] tile;                    
                     size_t index = (oam[1] >> 1) + (oam[1] & 1 ? 0x1000 : 0) + j*16;
                     patternTableAccess(m_patternTables[index..index+16], tile);
                     tile[] |= (0b100 | ((oam[2] & 0b0000_0011) << 2));
@@ -529,8 +576,16 @@ private:
                     SDL_Rect dstRect = {cast(short)(i*8), cast(short)(j*8)};
                     SDL_BlitSurface(sdlTile, null, sprites, &dstRect);
                 }
+
+                // decode sprite info
+                m_spriteinfos[i].priority = isOAMPrioritary(oam[2]);
+                m_spriteinfos[i].index    = i;
+                m_spriteinfos[i].left     = oam[3];
+                m_spriteinfos[i].top      = oam[0];
             }
         }
+
+        sort(m_spriteinfos[]);
     }
     
 public:
@@ -541,6 +596,8 @@ public:
                                    0xFF, 0xFF00, 0xFF0000, 0xFF000000);
         bg1 = SDL_CreateRGBSurface(SDL_HWSURFACE, 256, 240, 32,
                                    0xFF, 0xFF00, 0xFF0000, 0xFF000000);
+        sprites = SDL_CreateRGBSurface(SDL_HWSURFACE, 512, 16, 32,
+                                       0xFF, 0xFF00, 0xFF0000, 0xFF000000);
         needRedraw = true;
     }
 
@@ -929,6 +986,13 @@ public:
     }
     body
     {
+        size_t spriteIndex = 0;
+        if (showSprites)
+        {
+            decodeSprites();
+            spriteIndex = drawSprites(display, 0, true);
+        }
+
         if (showBackground)
         {
             drawBackground(display);
@@ -936,7 +1000,7 @@ public:
 
         if (showSprites)
         {
-            drawSprites(display);
+            drawSprites(display, spriteIndex, false);
         }
     }
 }
