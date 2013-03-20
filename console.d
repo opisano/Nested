@@ -21,6 +21,7 @@ module console;
 
 import cpu;
 import controller;
+import file.ines;
 import memory;
 import ppu;
 
@@ -28,11 +29,18 @@ import derelict.sdl.sdl;
 
 final class Console
 {
+    /// Our console CPU
     CPU cpu;
+
+    /// Our console graphic chip
     PPU ppu;
 
+    /// Our console controller 
     ControllerState ctrlState;
     Joystick joystick;
+
+    /// The screen the console is plugged to
+    SDL_Surface* display;
 
     void initJoystick()
     {
@@ -44,10 +52,11 @@ final class Console
     }
 
 public:
-    this()
+    this(SDL_Surface* disp)
     {
         ppu = new PPU();
         cpu = new CPU(ppu);
+        display = disp;
         initJoystick();
     }
 
@@ -59,7 +68,29 @@ public:
 
     void tick()
     {
-        cpu.clock();
+        cpu.clock(display);
+    }
+
+    void loadGame(string filename)
+    {
+        auto rom = file.ines.loadFile(filename);
+
+        const(ubyte)[] first, second;
+
+        switch (rom.prg.length)
+        {
+            case 16_384:
+                first = rom.prg[0..16_384];
+                second = null;
+                break;
+            case 32_768:
+                first = rom.prg[0..16_384];
+                second = rom.prg[16_384..$];
+                break;
+            default:
+                throw new Exception("ROM too big");
+        }
+        cpu.getMemoryMap().loadPrgRom(first, second);
     }
 
     void handleJoystickAxisEvent(const ref SDL_Event event)

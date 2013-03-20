@@ -23,6 +23,8 @@ import derelict.sdl.sdl;
 
 import std.algorithm;
 
+import common;
+
 enum TILES_PER_ROW      = 32;
 enum TILES_PER_COL      = 30;
 enum PATTERN_TILE_SIZE  = 16;
@@ -42,13 +44,14 @@ enum SpriteSize
     DOUBLE
 }
 
+/+
 /**
  * Checks value is in range [lower, upper[.
  */
 bool between(uint value, uint lower, uint upper) pure nothrow
 {
     return (lower <= value && upper > value);
-}
+}+/
 
 
 
@@ -136,7 +139,7 @@ enum bitToByte = buildBitToByteTable();
 /**
 * Performs a read in a pattern table and returns a 8x8 tile where each pixel 
 * least significant two bits are filled.
-* @param memory 16 bytes chunk from pattren table memory
+* @param memory 16 bytes chunk from pattern table memory
 * @param tile a 8x8 memory block 
 */
 void patternTableAccess(const ubyte[] memory, out ubyte[64] tile)
@@ -351,8 +354,6 @@ private:
 
     static immutable nametableAdresses = [0x2000, 0x2400, 0x2800, 0x2C00];
     
-    
-    
     size_t baseNameTableAddress;
     
     size_t vramAddressIncrement;
@@ -441,7 +442,7 @@ private:
         return hsvToRgb(paletteEntry);
     }
 
-    void drawBackground(ref SDL_Surface display)
+    void drawBackground(SDL_Surface* display)
     {
         if (needRedraw)
         {
@@ -450,7 +451,7 @@ private:
             if (mirroring == TableMirroring.SINGLE_SCREEN
                     || (horizontalScroll == 0 && verticalScroll == 0))
             {
-                SDL_BlitSurface(bg0, null, &display, null);
+                SDL_BlitSurface(bg0, null, display, null);
                 return;
             }
             else
@@ -461,24 +462,24 @@ private:
                 case TableMirroring.HORIZONTAL:
                     {
                         SDL_Rect dstRect = {cast(short)-horizontalScroll, cast(short)-verticalScroll};
-                        SDL_BlitSurface(bg0, null, &display, &dstRect);
+                        SDL_BlitSurface(bg0, null, display, &dstRect);
                         dstRect.x += 256;
-                        SDL_BlitSurface(bg0, null, &display, &dstRect);
+                        SDL_BlitSurface(bg0, null, display, &dstRect);
                         dstRect.y += 240;
-                        SDL_BlitSurface(bg1, null, &display, &dstRect);
+                        SDL_BlitSurface(bg1, null, display, &dstRect);
                         dstRect.x -= 256;
-                        SDL_BlitSurface(bg1, null, &display, &dstRect);
+                        SDL_BlitSurface(bg1, null, display, &dstRect);
                     }
                 case TableMirroring.VERTICAL:
                     {
                         SDL_Rect dstRect = {cast(short)-horizontalScroll, cast(short)-verticalScroll};
-                        SDL_BlitSurface(bg0, null, &display, &dstRect);
+                        SDL_BlitSurface(bg0, null, display, &dstRect);
                         dstRect.x += 256;
-                        SDL_BlitSurface(bg1, null, &display, &dstRect);
+                        SDL_BlitSurface(bg1, null, display, &dstRect);
                         dstRect.y += 240;
-                        SDL_BlitSurface(bg0, null, &display, &dstRect);
+                        SDL_BlitSurface(bg0, null, display, &dstRect);
                         dstRect.x -= 256;
-                        SDL_BlitSurface(bg1, null, &display, &dstRect);
+                        SDL_BlitSurface(bg1, null, display, &dstRect);
                     }
                 default:
                     // not supported
@@ -488,7 +489,7 @@ private:
         }
     }
 
-    size_t drawSprites(ref SDL_Surface display, size_t fromIndex, bool priority)
+    size_t drawSprites(SDL_Surface* display, size_t fromIndex, bool priority)
     {
         ushort height = spriteSize == SpriteSize.SINGLE ? 8 : 16;
         size_t i;
@@ -504,7 +505,7 @@ private:
             dstRect.x = m_spriteinfos[i].left;
             dstRect.y = m_spriteinfos[i].top;
 
-            SDL_BlitSurface(sprites, &srcRect, &display, &dstRect);
+            SDL_BlitSurface(sprites, &srcRect, display, &dstRect);
         }
 
         return i;
@@ -592,12 +593,16 @@ public:
 
     this()
     {
-        bg0 = SDL_CreateRGBSurface(SDL_HWSURFACE, 256, 240, 32,
+        bg0 = SDL_CreateRGBSurface(SDL_SWSURFACE, 256, 240, 32,
                                    0xFF, 0xFF00, 0xFF0000, 0xFF000000);
-        bg1 = SDL_CreateRGBSurface(SDL_HWSURFACE, 256, 240, 32,
+        bg1 = SDL_CreateRGBSurface(SDL_SWSURFACE, 256, 240, 32,
                                    0xFF, 0xFF00, 0xFF0000, 0xFF000000);
-        sprites = SDL_CreateRGBSurface(SDL_HWSURFACE, 512, 16, 32,
+        sprites = SDL_CreateRGBSurface(SDL_SWSURFACE, 512, 16, 32,
                                        0xFF, 0xFF00, 0xFF0000, 0xFF000000);
+
+        sdlTile = SDL_CreateRGBSurface(SDL_SWSURFACE, 8, 8, 32,
+                                       0xFF, 0xFF00, 0xFF0000, 0xFF000000);
+
         needRedraw = true;
     }
 
@@ -978,7 +983,7 @@ public:
         m_spriteRAM[address] = value;
     }
     
-    void draw(ref SDL_Surface display)
+    void draw(SDL_Surface* display)
     in
     {
         assert (display.w == 256);

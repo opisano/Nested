@@ -18,7 +18,8 @@
 ------------------------------------------------------------------------------*/
 
 module cpu;
- 
+
+import derelict.sdl.sdl;
 
 import std.conv;
 
@@ -44,6 +45,7 @@ final class CPU
 {
 private:
     uint cycles;
+    uint vblankCycles;
 
     void setZero(ubyte value)
     {
@@ -446,6 +448,8 @@ private:
                     ~ to!(string)(opcode));   
         }
     }
+
+    PPU ppu;
     
     // memory
     CPUMemoryMap memory;
@@ -499,8 +503,14 @@ public:
     }
     body
     {
+        this.ppu = ppu;
         memory = new CPUMemoryMap(this, ppu);
 		initDecoding();
+    }
+
+    CPUMemoryMap getMemoryMap()
+    {
+        return memory;
     }
 
     /**
@@ -512,14 +522,23 @@ public:
         cycles = 512;
     }
     
-    void clock()
+    void clock(SDL_Surface* display)
     {
+        vblankCycles++;
+
         if (cycles)
         {
             cycles--;
         }
         else
         {
+            if (vblankCycles >= 1789773 / 60)
+            {
+                // refresh screen
+                ppu.draw(display);
+                vblankCycles = 0;
+            }
+
             if (!interrupted()) // normal execution
             {
                 ubyte opcode = read_mem();
@@ -578,7 +597,7 @@ private:
         uint temp = m + a + (flags & CARRY);
         setZero(cast(ubyte)temp);
         
-        if (flags & DECIMAL)
+        /+if (flags & DECIMAL)
         {
              if (((a & 0xf) + (m & 0xf) + (flags & CARRY ? 1 : 0)) > 9) 
                  temp += 6;
@@ -588,11 +607,11 @@ private:
              setCarry(temp > 0x99 ? 1 : 0);
         }
         else
-        {
+        {+/
             setSign(cast(ubyte)temp);
             setOverflow(!((a ^ m) & 0x80) && ((a ^ temp) & 0x80));
             setCarry(temp > 0xff ? 1 : 0);
-        }
+        //}
         
         a = cast(ubyte) temp;
     }
