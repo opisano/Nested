@@ -187,6 +187,7 @@
   <filesToClean>*.obj</filesToClean>
  </Config>
  <Folder name="nested">
+  <File path="common.d" />
   <File path="console.d" />
   <File path="controller.d" />
   <File path="cpu.d" />
