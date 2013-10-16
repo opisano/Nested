@@ -22,6 +22,7 @@ module cpu;
 import derelict.sdl.sdl;
 
 import std.conv;
+import std.stdio;
 
 import memory;
 import ppu;
@@ -437,6 +438,11 @@ private:
     {
         auto fp = (opcode in opCodes);
 		scope (exit) boundary_crossed = false;
+
+		debug 
+		{
+			writefln("%04X\t%02X\t\tA:%02X X:%02X Y:%02X SP:%02X", pc, opCode, a, x, y, sp);
+		}
 		
 		if (fp !is null)
 		{
@@ -555,6 +561,9 @@ public:
 
                 // Set the interrupt disable flag
                 sei();
+
+				double d = 3.34;
+				int i = to!int(d);
 
                 ushort addr;
                 if (reset)

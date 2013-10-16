@@ -171,7 +171,7 @@ public:
         this.index = index;
         this.state = state;
         joystick   = SDL_JoystickOpen(index);
-        name       = to!(string)(SDL_JoystickName(index));
+        name       = to!(string)(SDL_JoystickName(joystick));
     }
     
     /** Handles joystick events for */

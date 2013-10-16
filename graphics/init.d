@@ -39,7 +39,7 @@ public:
  */
 final class Display
 {
-    SDL_Surface *display;
+    SDL_Surface* display;
     
 public:
     this(int factor)
@@ -51,7 +51,8 @@ public:
     {
         const int w = SCREEN_WIDTH * factor;
         const int h = SCREEN_HEIGHT * factor;
-        
+
+
         display = SDL_SetVideoMode(w, h, 32, SDL_SWSURFACE);
         if (display == null)
         {
