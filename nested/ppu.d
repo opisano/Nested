@@ -19,7 +19,7 @@
 
 module ppu;
 
-import derelict.sdl.sdl;
+import derelict.sdl2.sdl;
 
 import std.algorithm;
 
@@ -986,8 +986,8 @@ public:
     void draw(SDL_Surface* display)
     in
     {
-        assert (display.w == 256);
-        assert (display.h == 240);
+        assert ((*display).w == 256);
+        assert ((*display).h == 240);
     }
     body
     {

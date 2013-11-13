@@ -1,7 +1,9 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-Project("{002A2DE9-8BB6-484D-9802-7E4AD4084715}") = "nested", "nested.visualdproj", "{A0D89A49-530B-4A40-94A5-623E1FD74059}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{002A2DE9-8BB6-484D-9802-7E4AD4084715}") = "nested", "nested\nested.visualdproj", "{A0D89A49-530B-4A40-94A5-623E1FD74059}"
+EndProject
+Project("{002A2DE9-8BB6-484D-9802-7E4AD4084715}") = "cputest", "cputest\cputest.visualdproj", "{5BB036B1-FEA6-46AB-A278-CB6E82E6C0BF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,6 +15,10 @@ Global
 		{A0D89A49-530B-4A40-94A5-623E1FD74059}.Debug|Win32.Build.0 = Debug|Win32
 		{A0D89A49-530B-4A40-94A5-623E1FD74059}.Release|Win32.ActiveCfg = Release|Win32
 		{A0D89A49-530B-4A40-94A5-623E1FD74059}.Release|Win32.Build.0 = Release|Win32
+		{5BB036B1-FEA6-46AB-A278-CB6E82E6C0BF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5BB036B1-FEA6-46AB-A278-CB6E82E6C0BF}.Debug|Win32.Build.0 = Debug|Win32
+		{5BB036B1-FEA6-46AB-A278-CB6E82E6C0BF}.Release|Win32.ActiveCfg = Release|Win32
+		{5BB036B1-FEA6-46AB-A278-CB6E82E6C0BF}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

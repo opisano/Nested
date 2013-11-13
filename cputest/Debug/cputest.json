@@ -1,0 +1,3415 @@
+[
+ {
+  "name" : "common",
+  "kind" : "module",
+  "file" : "..\\nested\\common.d",
+  "members" : [
+   {
+    "name" : "IDisposable",
+    "kind" : "interface",
+    "line" : 23,
+    "members" : [
+     {
+      "name" : "dispose",
+      "kind" : "function",
+      "line" : 25,
+      "storageClass" : [
+       "abstract"
+      ],
+      "deco" : "FZv"
+     }
+    ]
+   },
+   {
+    "name" : "between",
+    "kind" : "function",
+    "line" : 31,
+    "deco" : "FNaNbkkkZb",
+    "parameters" : [
+     {
+      "name" : "value",
+      "deco" : "k"
+     },
+     {
+      "name" : "lower",
+      "deco" : "k"
+     },
+     {
+      "name" : "upper",
+      "deco" : "k"
+     }
+    ],
+    "endline" : 34
+   },
+   {
+    "kind" : "template",
+    "line" : 36,
+    "name" : "among",
+    "parameters" : [
+     {
+      "name" : "T",
+      "kind" : "type"
+     }
+    ],
+    "members" : [
+     {
+      "name" : "among",
+      "kind" : "function",
+      "line" : 36,
+      "type" : "bool(T value, T[] ts)",
+      "parameters" : [
+       {
+        "name" : "value",
+        "type" : "T"
+       },
+       {
+        "name" : "ts",
+        "type" : "T[]"
+       }
+      ],
+      "endline" : 46
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "name" : "console",
+  "kind" : "module",
+  "file" : "..\\nested\\console.d",
+  "members" : [
+   {
+    "name" : "cpu",
+    "kind" : "import",
+    "line" : 22,
+    "protection" : "private"
+   },
+   {
+    "name" : "controller",
+    "kind" : "import",
+    "line" : 23,
+    "protection" : "private"
+   },
+   {
+    "name" : "file.ines",
+    "kind" : "import",
+    "line" : 24,
+    "protection" : "private"
+   },
+   {
+    "name" : "memory",
+    "kind" : "import",
+    "line" : 25,
+    "protection" : "private"
+   },
+   {
+    "name" : "ppu",
+    "kind" : "import",
+    "line" : 26,
+    "protection" : "private"
+   },
+   {
+    "name" : "derelict.sdl2.sdl",
+    "kind" : "import",
+    "line" : 28,
+    "protection" : "private"
+   },
+   {
+    "name" : "ConsoleBuilder",
+    "kind" : "class",
+    "line" : 33,
+    "members" : [
+     {
+      "name" : "console",
+      "kind" : "variable",
+      "protection" : "protected",
+      "line" : 36,
+      "deco" : "C7console7Console",
+      "originalType" : "Console",
+      "offset" : 8
+     },
+     {
+      "name" : "createCPU",
+      "kind" : "function",
+      "line" : 39,
+      "storageClass" : [
+       "abstract"
+      ],
+      "deco" : "FZv"
+     },
+     {
+      "name" : "createDisplay",
+      "kind" : "function",
+      "line" : 40,
+      "storageClass" : [
+       "abstract"
+      ],
+      "deco" : "FPS8derelict4sdl25types11SDL_SurfaceZv",
+      "parameters" : [
+       {
+        "deco" : "PS8derelict4sdl25types11SDL_Surface"
+       }
+      ]
+     },
+     {
+      "name" : "createConsole",
+      "kind" : "function",
+      "line" : 42,
+      "deco" : "FPS8derelict4sdl25types11SDL_SurfaceZC7console7Console",
+      "parameters" : [
+       {
+        "name" : "display",
+        "deco" : "PS8derelict4sdl25types11SDL_Surface"
+       }
+      ],
+      "endline" : 49
+     }
+    ]
+   },
+   {
+    "name" : "PalConsoleBuilder",
+    "kind" : "class",
+    "line" : 52,
+    "base" : "ConsoleBuilder",
+    "members" : [
+     {
+      "name" : "PAL_CPU_FREQUENCY",
+      "kind" : "variable",
+      "line" : 54,
+      "storageClass" : [
+       "enum"
+      ],
+      "deco" : "i",
+      "init" : "1662607"
+     },
+     {
+      "name" : "createCPU",
+      "kind" : "function",
+      "line" : 56,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "FZv",
+      "endline" : 61,
+      "overrides" : [
+       "console.ConsoleBuilder.createCPU"
+      ]
+     },
+     {
+      "name" : "createDisplay",
+      "kind" : "function",
+      "line" : 63,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "FPS8derelict4sdl25types11SDL_SurfaceZv",
+      "parameters" : [
+       {
+        "name" : "display",
+        "deco" : "PS8derelict4sdl25types11SDL_Surface"
+       }
+      ],
+      "endline" : 68,
+      "overrides" : [
+       "console.ConsoleBuilder.createDisplay"
+      ]
+     }
+    ]
+   },
+   {
+    "name" : "Console",
+    "kind" : "class",
+    "line" : 71,
+    "members" : [
+     {
+      "name" : "cpu",
+      "kind" : "variable",
+      "line" : 74,
+      "deco" : "C3cpu3CPU",
+      "originalType" : "CPU",
+      "offset" : 8
+     },
+     {
+      "name" : "ppu",
+      "kind" : "variable",
+      "line" : 77,
+      "deco" : "C3ppu3PPU",
+      "originalType" : "PPU",
+      "offset" : 12
+     },
+     {
+      "name" : "ctrlState",
+      "kind" : "variable",
+      "line" : 80,
+      "deco" : "S10controller15ControllerState",
+      "offset" : 16
+     },
+     {
+      "name" : "joystick",
+      "kind" : "variable",
+      "line" : 81,
+      "deco" : "C10controller8Joystick",
+      "originalType" : "Joystick",
+      "offset" : 28
+     },
+     {
+      "name" : "display",
+      "kind" : "variable",
+      "line" : 84,
+      "deco" : "PS8derelict4sdl25types11SDL_Surface",
+      "offset" : 32
+     },
+     {
+      "name" : "cyclesPerFrame",
+      "kind" : "variable",
+      "line" : 87,
+      "deco" : "i",
+      "offset" : 36
+     },
+     {
+      "name" : "frequency",
+      "kind" : "variable",
+      "line" : 89,
+      "deco" : "i",
+      "offset" : 40
+     },
+     {
+      "name" : "initJoystick",
+      "kind" : "function",
+      "line" : 91,
+      "deco" : "FZv",
+      "endline" : 98
+     },
+     {
+      "name" : "this",
+      "kind" : "constructor",
+      "line" : 101,
+      "deco" : "FZC7console7Console",
+      "originalType" : "()",
+      "endline" : 104
+     },
+     {
+      "name" : "cleanup",
+      "kind" : "function",
+      "line" : 106,
+      "deco" : "FZv",
+      "endline" : 110
+     },
+     {
+      "name" : "tick",
+      "kind" : "function",
+      "line" : 112,
+      "deco" : "FZv",
+      "endline" : 120
+     },
+     {
+      "name" : "loadGame",
+      "kind" : "function",
+      "line" : 122,
+      "deco" : "FAyaZv",
+      "parameters" : [
+       {
+        "name" : "filename",
+        "deco" : "Aya"
+       }
+      ],
+      "endline" : 143
+     },
+     {
+      "name" : "handleJoystickAxisEvent",
+      "kind" : "function",
+      "line" : 145,
+      "deco" : "FKxS8derelict4sdl25types9SDL_EventZv",
+      "originalType" : "void(ref const SDL_Event event)",
+      "parameters" : [
+       {
+        "name" : "event",
+        "deco" : "xS8derelict4sdl25types9SDL_Event",
+        "storageClass" : [
+         "ref"
+        ]
+       }
+      ],
+      "endline" : 149
+     },
+     {
+      "name" : "handleJoystickButtonDownEvent",
+      "kind" : "function",
+      "line" : 151,
+      "deco" : "FKxS8derelict4sdl25types9SDL_EventZv",
+      "originalType" : "void(ref const SDL_Event event)",
+      "parameters" : [
+       {
+        "name" : "event",
+        "deco" : "xS8derelict4sdl25types9SDL_Event",
+        "storageClass" : [
+         "ref"
+        ]
+       }
+      ],
+      "endline" : 155
+     },
+     {
+      "name" : "handleJoystickButtonUpEvent",
+      "kind" : "function",
+      "line" : 157,
+      "deco" : "FKxS8derelict4sdl25types9SDL_EventZv",
+      "originalType" : "void(ref const SDL_Event event)",
+      "parameters" : [
+       {
+        "name" : "event",
+        "deco" : "xS8derelict4sdl25types9SDL_Event",
+        "storageClass" : [
+         "ref"
+        ]
+       }
+      ],
+      "endline" : 161
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "name" : "controller",
+  "kind" : "module",
+  "file" : "..\\nested\\controller.d",
+  "members" : [
+   {
+    "name" : "derelict.sdl2.sdl",
+    "kind" : "import",
+    "line" : 22,
+    "protection" : "private"
+   },
+   {
+    "name" : "std.conv",
+    "kind" : "import",
+    "line" : 23,
+    "protection" : "private"
+   },
+   {
+    "name" : "std.stdio",
+    "kind" : "import",
+    "line" : 24,
+    "protection" : "private"
+   },
+   {
+    "name" : "A",
+    "kind" : "variable",
+    "line" : 28,
+    "storageClass" : [
+     "enum"
+    ],
+    "deco" : "i",
+    "init" : "0"
+   },
+   {
+    "name" : "B",
+    "kind" : "variable",
+    "line" : 29,
+    "storageClass" : [
+     "enum"
+    ],
+    "deco" : "i",
+    "init" : "1"
+   },
+   {
+    "name" : "SELECT",
+    "kind" : "variable",
+    "line" : 30,
+    "storageClass" : [
+     "enum"
+    ],
+    "deco" : "i",
+    "init" : "2"
+   },
+   {
+    "name" : "START",
+    "kind" : "variable",
+    "line" : 31,
+    "storageClass" : [
+     "enum"
+    ],
+    "deco" : "i",
+    "init" : "3"
+   },
+   {
+    "name" : "UP",
+    "kind" : "variable",
+    "line" : 32,
+    "storageClass" : [
+     "enum"
+    ],
+    "deco" : "i",
+    "init" : "4"
+   },
+   {
+    "name" : "DOWN",
+    "kind" : "variable",
+    "line" : 33,
+    "storageClass" : [
+     "enum"
+    ],
+    "deco" : "i",
+    "init" : "5"
+   },
+   {
+    "name" : "LEFT",
+    "kind" : "variable",
+    "line" : 34,
+    "storageClass" : [
+     "enum"
+    ],
+    "deco" : "i",
+    "init" : "6"
+   },
+   {
+    "name" : "RIGHT",
+    "kind" : "variable",
+    "line" : 35,
+    "storageClass" : [
+     "enum"
+    ],
+    "deco" : "i",
+    "init" : "7"
+   },
+   {
+    "name" : "ControllerState",
+    "kind" : "struct",
+    "line" : 40,
+    "members" : [
+     {
+      "name" : "states",
+      "kind" : "variable",
+      "line" : 43,
+      "deco" : "G8h",
+      "offset" : 0
+     },
+     {
+      "name" : "index",
+      "kind" : "variable",
+      "line" : 46,
+      "deco" : "h",
+      "offset" : 8
+     },
+     {
+      "name" : "write",
+      "kind" : "function",
+      "line" : 48,
+      "deco" : "FhZv",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "h"
+       }
+      ],
+      "endline" : 51
+     },
+     {
+      "name" : "read",
+      "kind" : "function",
+      "line" : 54,
+      "deco" : "FZh",
+      "endline" : 60
+     },
+     {
+      "name" : "onAPressed",
+      "kind" : "function",
+      "line" : 62,
+      "deco" : "FZv",
+      "endline" : 65
+     },
+     {
+      "name" : "onAReleased",
+      "kind" : "function",
+      "line" : 67,
+      "deco" : "FZv",
+      "endline" : 70
+     },
+     {
+      "name" : "onBPressed",
+      "kind" : "function",
+      "line" : 72,
+      "deco" : "FZv",
+      "endline" : 75
+     },
+     {
+      "name" : "onBReleased",
+      "kind" : "function",
+      "line" : 77,
+      "deco" : "FZv",
+      "endline" : 80
+     },
+     {
+      "name" : "onSelectPressed",
+      "kind" : "function",
+      "line" : 82,
+      "deco" : "FZv",
+      "endline" : 85
+     },
+     {
+      "name" : "onSelectReleased",
+      "kind" : "function",
+      "line" : 87,
+      "deco" : "FZv",
+      "endline" : 91
+     },
+     {
+      "name" : "onStartPressed",
+      "kind" : "function",
+      "line" : 93,
+      "deco" : "FZv",
+      "endline" : 96
+     },
+     {
+      "name" : "onStartReleased",
+      "kind" : "function",
+      "line" : 98,
+      "deco" : "FZv",
+      "endline" : 101
+     },
+     {
+      "name" : "onUpPressed",
+      "kind" : "function",
+      "line" : 103,
+      "deco" : "FZv",
+      "endline" : 106
+     },
+     {
+      "name" : "onUpReleased",
+      "kind" : "function",
+      "line" : 108,
+      "deco" : "FZv",
+      "endline" : 111
+     },
+     {
+      "name" : "onDownPressed",
+      "kind" : "function",
+      "line" : 113,
+      "deco" : "FZv",
+      "endline" : 116
+     },
+     {
+      "name" : "onDownReleased",
+      "kind" : "function",
+      "line" : 118,
+      "deco" : "FZv",
+      "endline" : 121
+     },
+     {
+      "name" : "onLeftPressed",
+      "kind" : "function",
+      "line" : 123,
+      "deco" : "FZv",
+      "endline" : 126
+     },
+     {
+      "name" : "onLeftReleased",
+      "kind" : "function",
+      "line" : 128,
+      "deco" : "FZv",
+      "endline" : 131
+     },
+     {
+      "name" : "onRightPressed",
+      "kind" : "function",
+      "line" : 133,
+      "deco" : "FZv",
+      "endline" : 136
+     },
+     {
+      "name" : "onRightReleased",
+      "kind" : "function",
+      "line" : 138,
+      "deco" : "FZv",
+      "endline" : 141
+     }
+    ]
+   },
+   {
+    "name" : "Joystick",
+    "kind" : "class",
+    "line" : 145,
+    "members" : [
+     {
+      "name" : "index",
+      "kind" : "variable",
+      "line" : 148,
+      "deco" : "k",
+      "offset" : 8
+     },
+     {
+      "name" : "joystick",
+      "kind" : "variable",
+      "line" : 150,
+      "deco" : "PS8derelict4sdl25types12SDL_Joystick",
+      "offset" : 12
+     },
+     {
+      "name" : "state",
+      "kind" : "variable",
+      "line" : 152,
+      "deco" : "PS10controller15ControllerState",
+      "offset" : 16
+     },
+     {
+      "name" : "name",
+      "kind" : "variable",
+      "line" : 155,
+      "deco" : "Aya",
+      "offset" : 20
+     },
+     {
+      "name" : "getJoystickCount",
+      "kind" : "function",
+      "line" : 158,
+      "storageClass" : [
+       "static"
+      ],
+      "deco" : "FZk",
+      "endline" : 161
+     },
+     {
+      "name" : "this",
+      "kind" : "constructor",
+      "line" : 163,
+      "deco" : "FkPS10controller15ControllerStateZC10controller8Joystick",
+      "originalType" : "(uint index, ControllerState* state)",
+      "parameters" : [
+       {
+        "name" : "index",
+        "deco" : "k"
+       },
+       {
+        "name" : "state",
+        "deco" : "PS10controller15ControllerState"
+       }
+      ],
+      "endline" : 175
+     },
+     {
+      "name" : "handleAxisEvent",
+      "kind" : "function",
+      "line" : 178,
+      "deco" : "FKxS8derelict4sdl25types9SDL_EventZv",
+      "originalType" : "void(ref const SDL_Event event)",
+      "parameters" : [
+       {
+        "name" : "event",
+        "deco" : "xS8derelict4sdl25types9SDL_Event",
+        "storageClass" : [
+         "ref"
+        ]
+       }
+      ],
+      "endline" : 222
+     },
+     {
+      "name" : "handleButtonDownEvent",
+      "kind" : "function",
+      "line" : 224,
+      "deco" : "FKxS8derelict4sdl25types9SDL_EventZv",
+      "originalType" : "void(ref const SDL_Event event)",
+      "parameters" : [
+       {
+        "name" : "event",
+        "deco" : "xS8derelict4sdl25types9SDL_Event",
+        "storageClass" : [
+         "ref"
+        ]
+       }
+      ],
+      "endline" : 244
+     },
+     {
+      "name" : "handleButtonUpEvent",
+      "kind" : "function",
+      "line" : 246,
+      "deco" : "FKxS8derelict4sdl25types9SDL_EventZv",
+      "originalType" : "void(ref const SDL_Event event)",
+      "parameters" : [
+       {
+        "name" : "event",
+        "deco" : "xS8derelict4sdl25types9SDL_Event",
+        "storageClass" : [
+         "ref"
+        ]
+       }
+      ],
+      "endline" : 266
+     },
+     {
+      "name" : "cleanup",
+      "kind" : "function",
+      "line" : 268,
+      "deco" : "FZv",
+      "endline" : 272
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "name" : "cpu",
+  "kind" : "module",
+  "file" : "..\\nested\\cpu.d",
+  "members" : [
+   {
+    "name" : "derelict.sdl2.sdl",
+    "kind" : "import",
+    "line" : 22,
+    "protection" : "private"
+   },
+   {
+    "name" : "ppu",
+    "kind" : "import",
+    "line" : 23,
+    "protection" : "private"
+   },
+   {
+    "name" : "std.conv",
+    "kind" : "import",
+    "line" : 24,
+    "protection" : "private"
+   },
+   {
+    "name" : "std.stdio",
+    "kind" : "import",
+    "line" : 25,
+    "protection" : "private"
+   },
+   {
+    "name" : "memory",
+    "kind" : "import",
+    "line" : 27,
+    "protection" : "private"
+   },
+   {
+    "name" : "CARRY",
+    "kind" : "variable",
+    "line" : 30,
+    "storageClass" : [
+     "enum"
+    ],
+    "deco" : "i",
+    "init" : "1"
+   },
+   {
+    "name" : "ZERO",
+    "kind" : "variable",
+    "line" : 31,
+    "storageClass" : [
+     "enum"
+    ],
+    "deco" : "i",
+    "init" : "2"
+   },
+   {
+    "name" : "INTERRUPT",
+    "kind" : "variable",
+    "line" : 32,
+    "storageClass" : [
+     "enum"
+    ],
+    "deco" : "i",
+    "init" : "4"
+   },
+   {
+    "name" : "DECIMAL",
+    "kind" : "variable",
+    "line" : 33,
+    "storageClass" : [
+     "enum"
+    ],
+    "deco" : "i",
+    "init" : "8"
+   },
+   {
+    "name" : "BREAK",
+    "kind" : "variable",
+    "line" : 34,
+    "storageClass" : [
+     "enum"
+    ],
+    "deco" : "i",
+    "init" : "16"
+   },
+   {
+    "name" : "OVERFLOW",
+    "kind" : "variable",
+    "line" : 36,
+    "storageClass" : [
+     "enum"
+    ],
+    "deco" : "i",
+    "init" : "64"
+   },
+   {
+    "name" : "NEGATIVE",
+    "kind" : "variable",
+    "line" : 37,
+    "storageClass" : [
+     "enum"
+    ],
+    "deco" : "i",
+    "init" : "128"
+   },
+   {
+    "name" : "CPU",
+    "kind" : "class",
+    "line" : 43,
+    "members" : [
+     {
+      "name" : "cycles",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 46,
+      "deco" : "k",
+      "offset" : 8
+     },
+     {
+      "name" : "setZero",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 48,
+      "deco" : "FhZv",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "h"
+       }
+      ],
+      "endline" : 58
+     },
+     {
+      "name" : "setSign",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 60,
+      "deco" : "FhZv",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "h"
+       }
+      ],
+      "endline" : 70
+     },
+     {
+      "name" : "setCarry",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 72,
+      "deco" : "FiZv",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "i"
+       }
+      ],
+      "endline" : 82
+     },
+     {
+      "name" : "setOverflow",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 84,
+      "deco" : "FiZv",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "i"
+       }
+      ],
+      "endline" : 94
+     },
+     {
+      "name" : "crossPage",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 96,
+      "storageClass" : [
+       "static"
+      ],
+      "deco" : "FNaNbkkZb",
+      "parameters" : [
+       {
+        "name" : "addr1",
+        "deco" : "k"
+       },
+       {
+        "name" : "addr2",
+        "deco" : "k"
+       }
+      ],
+      "endline" : 99
+     },
+     {
+      "name" : "read_mem",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 105,
+      "deco" : "FZh",
+      "endline" : 108
+     },
+     {
+      "name" : "absolute",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 112,
+      "deco" : "FZS6memory7MemInfo",
+      "endline" : 124
+     },
+     {
+      "name" : "absolute_address",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 126,
+      "deco" : "FZt",
+      "endline" : 132
+     },
+     {
+      "name" : "zero_page",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 134,
+      "deco" : "FZS6memory7MemInfo",
+      "endline" : 143
+     },
+     {
+      "name" : "absolute_x",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 145,
+      "deco" : "FZS6memory7MemInfo",
+      "endline" : 157
+     },
+     {
+      "name" : "absolute_y",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 159,
+      "deco" : "FZS6memory7MemInfo",
+      "endline" : 172
+     },
+     {
+      "name" : "zero_page_x",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 174,
+      "deco" : "FZS6memory7MemInfo",
+      "endline" : 185
+     },
+     {
+      "name" : "zero_page_y",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 187,
+      "deco" : "FZS6memory7MemInfo",
+      "endline" : 198
+     },
+     {
+      "name" : "absolute_indirect",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 200,
+      "deco" : "FZt",
+      "endline" : 211
+     },
+     {
+      "name" : "indirect",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 213,
+      "deco" : "FZt",
+      "endline" : 225
+     },
+     {
+      "name" : "zero_page_x_indirect",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 227,
+      "deco" : "FZS6memory7MemInfo",
+      "endline" : 242
+     },
+     {
+      "name" : "zero_page_y_indirect",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 244,
+      "deco" : "FZS6memory7MemInfo",
+      "endline" : 259
+     },
+     {
+      "name" : "func",
+      "kind" : "alias",
+      "protection" : "private",
+      "line" : 261,
+      "deco" : "DFZv"
+     },
+     {
+      "name" : "opCodes",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 262,
+      "deco" : "HhDFZv",
+      "originalType" : "func[ubyte]",
+      "offset" : 12
+     },
+     {
+      "name" : "initDecoding",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 269,
+      "deco" : "FZv",
+      "endline" : 422
+     },
+     {
+      "name" : "decode",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 424,
+      "deco" : "FhZv",
+      "parameters" : [
+       {
+        "name" : "opcode",
+        "deco" : "h"
+       }
+      ],
+      "endline" : 453
+     },
+     {
+      "name" : "memory",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 456,
+      "deco" : "C6memory12CPUMemoryMap",
+      "originalType" : "CPUMemoryMap",
+      "offset" : 16
+     },
+     {
+      "name" : "pc",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 459,
+      "deco" : "t",
+      "offset" : 20
+     },
+     {
+      "name" : "flags",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 462,
+      "deco" : "h",
+      "offset" : 22
+     },
+     {
+      "name" : "a",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 465,
+      "deco" : "h",
+      "offset" : 23
+     },
+     {
+      "name" : "x",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 468,
+      "deco" : "h",
+      "offset" : 24
+     },
+     {
+      "name" : "y",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 471,
+      "deco" : "h",
+      "offset" : 25
+     },
+     {
+      "name" : "sp",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 474,
+      "deco" : "h",
+      "offset" : 26
+     },
+     {
+      "name" : "boundary_crossed",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 477,
+      "deco" : "b",
+      "offset" : 27
+     },
+     {
+      "name" : "irq",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 480,
+      "deco" : "b",
+      "offset" : 28
+     },
+     {
+      "name" : "reset",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 483,
+      "deco" : "b",
+      "offset" : 29
+     },
+     {
+      "name" : "nmi",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 486,
+      "deco" : "b",
+      "offset" : 30
+     },
+     {
+      "name" : "interrupted",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 493,
+      "deco" : "xFNbZb",
+      "endline" : 496
+     },
+     {
+      "name" : "this",
+      "kind" : "constructor",
+      "line" : 500,
+      "deco" : "FZC3cpu3CPU",
+      "originalType" : "()",
+      "endline" : 504
+     },
+     {
+      "name" : "setPPU",
+      "kind" : "function",
+      "line" : 509,
+      "deco" : "FC3ppu3PPUZv",
+      "parameters" : [
+       {
+        "name" : "ppu",
+        "deco" : "C3ppu3PPU"
+       }
+      ],
+      "endline" : 512
+     },
+     {
+      "name" : "setPC",
+      "kind" : "function",
+      "line" : 517,
+      "deco" : "FtZv",
+      "parameters" : [
+       {
+        "name" : "pc",
+        "deco" : "t"
+       }
+      ],
+      "endline" : 520
+     },
+     {
+      "name" : "getMemoryMap",
+      "kind" : "function",
+      "line" : 525,
+      "deco" : "FZC6memory12CPUMemoryMap",
+      "endline" : 528
+     },
+     {
+      "name" : "dmaOccured",
+      "kind" : "function",
+      "line" : 534,
+      "deco" : "FZv",
+      "endline" : 537
+     },
+     {
+      "name" : "clock",
+      "kind" : "function",
+      "line" : 539,
+      "deco" : "FPS8derelict4sdl25types11SDL_SurfaceZv",
+      "parameters" : [
+       {
+        "name" : "display",
+        "deco" : "PS8derelict4sdl25types11SDL_Surface"
+       }
+      ],
+      "endline" : 592
+     },
+     {
+      "name" : "adc",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 603,
+      "deco" : "FhZv",
+      "parameters" : [
+       {
+        "name" : "m",
+        "deco" : "h"
+       }
+      ],
+      "endline" : 625
+     },
+     {
+      "name" : "and",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 635,
+      "deco" : "FhZv",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "h"
+       }
+      ],
+      "endline" : 640
+     },
+     {
+      "name" : "asl",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 653,
+      "deco" : "FZv",
+      "endline" : 660
+     },
+     {
+      "name" : "asl",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 662,
+      "deco" : "FthZv",
+      "parameters" : [
+       {
+        "name" : "address",
+        "deco" : "t"
+       },
+       {
+        "name" : "value",
+        "deco" : "h"
+       }
+      ],
+      "endline" : 670
+     },
+     {
+      "name" : "bcc",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 677,
+      "deco" : "FgZv",
+      "parameters" : [
+       {
+        "name" : "offset",
+        "deco" : "g"
+       }
+      ],
+      "endline" : 685
+     },
+     {
+      "name" : "bcs",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 692,
+      "deco" : "FgZv",
+      "parameters" : [
+       {
+        "name" : "offset",
+        "deco" : "g"
+       }
+      ],
+      "endline" : 700
+     },
+     {
+      "name" : "beq",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 707,
+      "deco" : "FgZv",
+      "parameters" : [
+       {
+        "name" : "offset",
+        "deco" : "g"
+       }
+      ],
+      "endline" : 716
+     },
+     {
+      "name" : "bit",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 728,
+      "deco" : "FhZv",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "h"
+       }
+      ],
+      "endline" : 743
+     },
+     {
+      "name" : "bmi",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 751,
+      "deco" : "FgZv",
+      "parameters" : [
+       {
+        "name" : "offset",
+        "deco" : "g"
+       }
+      ],
+      "endline" : 759
+     },
+     {
+      "name" : "bne",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 767,
+      "deco" : "FgZv",
+      "parameters" : [
+       {
+        "name" : "offset",
+        "deco" : "g"
+       }
+      ],
+      "endline" : 775
+     },
+     {
+      "name" : "bpl",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 783,
+      "deco" : "FgZv",
+      "parameters" : [
+       {
+        "name" : "offset",
+        "deco" : "g"
+       }
+      ],
+      "endline" : 791
+     },
+     {
+      "name" : "brk",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 801,
+      "deco" : "FZv",
+      "endline" : 818
+     },
+     {
+      "name" : "bvc",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 826,
+      "deco" : "FgZv",
+      "parameters" : [
+       {
+        "name" : "offset",
+        "deco" : "g"
+       }
+      ],
+      "endline" : 834
+     },
+     {
+      "name" : "bvs",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 842,
+      "deco" : "FgZv",
+      "parameters" : [
+       {
+        "name" : "offset",
+        "deco" : "g"
+       }
+      ],
+      "endline" : 850
+     },
+     {
+      "name" : "clc",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 858,
+      "deco" : "FZv",
+      "endline" : 861
+     },
+     {
+      "name" : "cld",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 867,
+      "deco" : "FZv",
+      "endline" : 870
+     },
+     {
+      "name" : "cli",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 876,
+      "deco" : "FZv",
+      "endline" : 884
+     },
+     {
+      "name" : "clv",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 890,
+      "deco" : "FZv",
+      "endline" : 898
+     },
+     {
+      "name" : "cmp",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 908,
+      "deco" : "FhZv",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "h"
+       }
+      ],
+      "endline" : 924
+     },
+     {
+      "name" : "cpx",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 934,
+      "deco" : "FhZv",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "h"
+       }
+      ],
+      "endline" : 950
+     },
+     {
+      "name" : "cpy",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 958,
+      "deco" : "FhZv",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "h"
+       }
+      ],
+      "endline" : 974
+     },
+     {
+      "name" : "dec",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 984,
+      "deco" : "FtZv",
+      "parameters" : [
+       {
+        "name" : "address",
+        "deco" : "t"
+       }
+      ],
+      "endline" : 990
+     },
+     {
+      "name" : "dex",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 1000,
+      "deco" : "FZv",
+      "endline" : 1006
+     },
+     {
+      "name" : "dey",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 1016,
+      "deco" : "FZv",
+      "endline" : 1022
+     },
+     {
+      "name" : "eor",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 1032,
+      "deco" : "FhZv",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "h"
+       }
+      ],
+      "endline" : 1038
+     },
+     {
+      "name" : "inc",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 1049,
+      "deco" : "FtZv",
+      "parameters" : [
+       {
+        "name" : "address",
+        "deco" : "t"
+       }
+      ],
+      "endline" : 1055
+     },
+     {
+      "name" : "inx",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 1065,
+      "deco" : "FZv",
+      "endline" : 1071
+     },
+     {
+      "name" : "iny",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 1081,
+      "deco" : "FZv",
+      "endline" : 1087
+     },
+     {
+      "name" : "jmp",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 1094,
+      "deco" : "FtZv",
+      "parameters" : [
+       {
+        "name" : "address",
+        "deco" : "t"
+       }
+      ],
+      "endline" : 1097
+     },
+     {
+      "name" : "jsr",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 1110,
+      "deco" : "FtZv",
+      "parameters" : [
+       {
+        "name" : "address",
+        "deco" : "t"
+       }
+      ],
+      "endline" : 1117
+     },
+     {
+      "name" : "lda",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 1127,
+      "deco" : "FhZv",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "h"
+       }
+      ],
+      "endline" : 1132
+     },
+     {
+      "name" : "ldx",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 1142,
+      "deco" : "FhZv",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "h"
+       }
+      ],
+      "endline" : 1147
+     },
+     {
+      "name" : "ldy",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 1157,
+      "deco" : "FhZv",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "h"
+       }
+      ],
+      "endline" : 1162
+     },
+     {
+      "name" : "lsr",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 1172,
+      "deco" : "FZv",
+      "endline" : 1179
+     },
+     {
+      "name" : "lsr",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 1181,
+      "deco" : "FthZv",
+      "parameters" : [
+       {
+        "name" : "address",
+        "deco" : "t"
+       },
+       {
+        "name" : "value",
+        "deco" : "h"
+       }
+      ],
+      "endline" : 1189
+     },
+     {
+      "name" : "ora",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 1199,
+      "deco" : "FhZv",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "h"
+       }
+      ],
+      "endline" : 1205
+     },
+     {
+      "name" : "nop",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 1210,
+      "deco" : "FZv",
+      "endline" : 1213
+     },
+     {
+      "name" : "pha",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 1222,
+      "deco" : "FZv",
+      "endline" : 1225
+     },
+     {
+      "name" : "php",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 1232,
+      "deco" : "FZv",
+      "endline" : 1235
+     },
+     {
+      "name" : "pla",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 1243,
+      "deco" : "FZv",
+      "endline" : 1246
+     },
+     {
+      "name" : "plp",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 1254,
+      "deco" : "FZv",
+      "endline" : 1257
+     },
+     {
+      "name" : "rol",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 1266,
+      "deco" : "FZv",
+      "endline" : 1275
+     },
+     {
+      "name" : "rol",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 1277,
+      "deco" : "FthZv",
+      "parameters" : [
+       {
+        "name" : "address",
+        "deco" : "t"
+       },
+       {
+        "name" : "value",
+        "deco" : "h"
+       }
+      ],
+      "endline" : 1289
+     },
+     {
+      "name" : "ror",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 1298,
+      "deco" : "FZv",
+      "endline" : 1307
+     },
+     {
+      "name" : "ror",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 1309,
+      "deco" : "FthZv",
+      "parameters" : [
+       {
+        "name" : "address",
+        "deco" : "t"
+       },
+       {
+        "name" : "value",
+        "deco" : "h"
+       }
+      ],
+      "endline" : 1321
+     },
+     {
+      "name" : "rti",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 1330,
+      "deco" : "FZv",
+      "endline" : 1335
+     },
+     {
+      "name" : "rts",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 1344,
+      "deco" : "FZv",
+      "endline" : 1348
+     },
+     {
+      "name" : "sbc",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 1360,
+      "deco" : "FhZv",
+      "parameters" : [
+       {
+        "name" : "m",
+        "deco" : "h"
+       }
+      ],
+      "endline" : 1375
+     },
+     {
+      "name" : "sec",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 1383,
+      "deco" : "FZv",
+      "endline" : 1391
+     },
+     {
+      "name" : "sed",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 1398,
+      "deco" : "FZv",
+      "endline" : 1406
+     },
+     {
+      "name" : "sei",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 1412,
+      "deco" : "FZv",
+      "endline" : 1420
+     },
+     {
+      "name" : "sta",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 1429,
+      "deco" : "FtZv",
+      "parameters" : [
+       {
+        "name" : "address",
+        "deco" : "t"
+       }
+      ],
+      "endline" : 1432
+     },
+     {
+      "name" : "stx",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 1441,
+      "deco" : "FtZv",
+      "parameters" : [
+       {
+        "name" : "address",
+        "deco" : "t"
+       }
+      ],
+      "endline" : 1444
+     },
+     {
+      "name" : "sty",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 1453,
+      "deco" : "FtZv",
+      "parameters" : [
+       {
+        "name" : "address",
+        "deco" : "t"
+       }
+      ],
+      "endline" : 1456
+     },
+     {
+      "name" : "tax",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 1466,
+      "deco" : "FZv",
+      "endline" : 1471
+     },
+     {
+      "name" : "tay",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 1481,
+      "deco" : "FZv",
+      "endline" : 1486
+     },
+     {
+      "name" : "tsx",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 1496,
+      "deco" : "FZv",
+      "endline" : 1501
+     },
+     {
+      "name" : "txa",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 1511,
+      "deco" : "FZv",
+      "endline" : 1516
+     },
+     {
+      "name" : "txs",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 1525,
+      "deco" : "FZv",
+      "endline" : 1528
+     },
+     {
+      "name" : "tya",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 1538,
+      "deco" : "FZv",
+      "endline" : 1543
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "name" : "file.ines",
+  "kind" : "module",
+  "file" : "..\\nested\\file\\ines.d",
+  "members" : [
+   {
+    "name" : "std.exception",
+    "kind" : "import",
+    "line" : 22,
+    "protection" : "private"
+   },
+   {
+    "name" : "std.stdio",
+    "kind" : "import",
+    "line" : 23,
+    "protection" : "private"
+   },
+   {
+    "name" : "file.rom",
+    "kind" : "import",
+    "line" : 25,
+    "protection" : "private"
+   },
+   {
+    "name" : "loadFile",
+    "kind" : "function",
+    "line" : 27,
+    "deco" : "FAyaZxS4file3rom3Rom",
+    "parameters" : [
+     {
+      "name" : "filename",
+      "deco" : "Aya"
+     }
+    ],
+    "endline" : 93
+   }
+  ]
+ },
+ {
+  "name" : "main",
+  "kind" : "module",
+  "file" : "main.d",
+  "members" : [
+   {
+    "name" : "std.conv",
+    "kind" : "import",
+    "line" : 3,
+    "protection" : "private"
+   },
+   {
+    "name" : "std.stdio",
+    "kind" : "import",
+    "line" : 4,
+    "protection" : "private"
+   },
+   {
+    "name" : "std.exception",
+    "kind" : "import",
+    "line" : 5,
+    "protection" : "private"
+   },
+   {
+    "name" : "derelict.sdl2.sdl",
+    "kind" : "import",
+    "line" : 7,
+    "protection" : "private"
+   },
+   {
+    "name" : "console",
+    "kind" : "import",
+    "line" : 9,
+    "protection" : "private"
+   },
+   {
+    "name" : "main",
+    "kind" : "function",
+    "line" : 11,
+    "deco" : "FAAyaZv",
+    "parameters" : [
+     {
+      "name" : "argv",
+      "deco" : "AAya"
+     }
+    ],
+    "endline" : 71
+   }
+  ]
+ },
+ {
+  "name" : "memory",
+  "kind" : "module",
+  "file" : "..\\nested\\memory.d",
+  "members" : [
+   {
+    "name" : "cpu",
+    "kind" : "import",
+    "line" : 22,
+    "protection" : "private"
+   },
+   {
+    "name" : "ppu",
+    "kind" : "import",
+    "line" : 23,
+    "protection" : "private"
+   },
+   {
+    "name" : "controller",
+    "kind" : "import",
+    "line" : 24,
+    "protection" : "private"
+   },
+   {
+    "name" : "MEMORY_SIZE",
+    "kind" : "variable",
+    "line" : 26,
+    "storageClass" : [
+     "enum"
+    ],
+    "deco" : "i",
+    "init" : "2048"
+   },
+   {
+    "name" : "PPU_REGISTERS",
+    "kind" : "variable",
+    "line" : 27,
+    "storageClass" : [
+     "enum"
+    ],
+    "deco" : "i",
+    "init" : "8192"
+   },
+   {
+    "name" : "APU_REGISTERS",
+    "kind" : "variable",
+    "line" : 28,
+    "storageClass" : [
+     "enum"
+    ],
+    "deco" : "i",
+    "init" : "16384"
+   },
+   {
+    "name" : "CARTRIDGE_EX",
+    "kind" : "variable",
+    "line" : 29,
+    "storageClass" : [
+     "enum"
+    ],
+    "deco" : "i",
+    "init" : "16416"
+   },
+   {
+    "name" : "SRAM",
+    "kind" : "variable",
+    "line" : 30,
+    "storageClass" : [
+     "enum"
+    ],
+    "deco" : "i",
+    "init" : "24576"
+   },
+   {
+    "name" : "PRG_ROM",
+    "kind" : "variable",
+    "line" : 31,
+    "storageClass" : [
+     "enum"
+    ],
+    "deco" : "i",
+    "init" : "32768"
+   },
+   {
+    "name" : "MemInfo",
+    "kind" : "struct",
+    "line" : 33,
+    "members" : [
+     {
+      "name" : "address",
+      "kind" : "variable",
+      "line" : 35,
+      "deco" : "t",
+      "offset" : 0
+     },
+     {
+      "name" : "value",
+      "kind" : "variable",
+      "line" : 36,
+      "deco" : "h",
+      "offset" : 2
+     }
+    ]
+   },
+   {
+    "name" : "CPUMemoryMap",
+    "kind" : "class",
+    "line" : 40,
+    "members" : [
+     {
+      "name" : "memory",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 45,
+      "deco" : "G2048h",
+      "originalType" : "ubyte[MEMORY_SIZE]",
+      "offset" : 8
+     },
+     {
+      "name" : "prgRom",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 48,
+      "deco" : "G32768h",
+      "offset" : 2056
+     },
+     {
+      "name" : "ppu",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 50,
+      "deco" : "C3ppu3PPU",
+      "originalType" : "PPU",
+      "offset" : 34824
+     },
+     {
+      "name" : "cpu",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 51,
+      "deco" : "C3cpu3CPU",
+      "originalType" : "CPU",
+      "offset" : 34828
+     },
+     {
+      "name" : "controller1",
+      "kind" : "variable",
+      "line" : 55,
+      "deco" : "S10controller15ControllerState",
+      "offset" : 34832
+     },
+     {
+      "name" : "controller2",
+      "kind" : "variable",
+      "line" : 56,
+      "deco" : "S10controller15ControllerState",
+      "offset" : 34841
+     },
+     {
+      "name" : "this",
+      "kind" : "constructor",
+      "line" : 58,
+      "deco" : "FC3cpu3CPUC3ppu3PPUZC6memory12CPUMemoryMap",
+      "originalType" : "(CPU a_cpu, PPU a_ppu)",
+      "parameters" : [
+       {
+        "name" : "a_cpu",
+        "deco" : "C3cpu3CPU"
+       },
+       {
+        "name" : "a_ppu",
+        "deco" : "C3ppu3PPU"
+       }
+      ],
+      "endline" : 62
+     },
+     {
+      "name" : "opIndex",
+      "kind" : "function",
+      "line" : 64,
+      "deco" : "FkZh",
+      "originalType" : "ubyte(size_t index)",
+      "parameters" : [
+       {
+        "name" : "index",
+        "deco" : "k"
+       }
+      ],
+      "endline" : 120
+     },
+     {
+      "name" : "opIndexAssign",
+      "kind" : "function",
+      "line" : 122,
+      "deco" : "FhkZh",
+      "originalType" : "ubyte(ubyte value, size_t index)",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "h"
+       },
+       {
+        "name" : "index",
+        "deco" : "k"
+       }
+      ],
+      "endline" : 193
+     },
+     {
+      "name" : "loadPrgRom",
+      "kind" : "function",
+      "line" : 201,
+      "deco" : "FxAhxAhZv",
+      "originalType" : "void(const ubyte[] firstBank, const ubyte[] secondBank)",
+      "parameters" : [
+       {
+        "name" : "firstBank",
+        "deco" : "xAh"
+       },
+       {
+        "name" : "secondBank",
+        "deco" : "xAh"
+       }
+      ],
+      "endline" : 214,
+      "in" : {
+       "name" : "__require",
+       "kind" : "function",
+       "line" : 203,
+       "deco" : "FZv",
+       "endline" : 203
+      }
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "name" : "ppu",
+  "kind" : "module",
+  "file" : "..\\nested\\ppu.d",
+  "members" : [
+   {
+    "name" : "derelict.sdl2.sdl",
+    "kind" : "import",
+    "line" : 22,
+    "protection" : "private"
+   },
+   {
+    "name" : "std.algorithm",
+    "kind" : "import",
+    "line" : 24,
+    "protection" : "private"
+   },
+   {
+    "name" : "common",
+    "kind" : "import",
+    "line" : 26,
+    "protection" : "private"
+   },
+   {
+    "name" : "TILES_PER_ROW",
+    "kind" : "variable",
+    "line" : 28,
+    "storageClass" : [
+     "enum"
+    ],
+    "deco" : "i",
+    "init" : "32"
+   },
+   {
+    "name" : "TILES_PER_COL",
+    "kind" : "variable",
+    "line" : 29,
+    "storageClass" : [
+     "enum"
+    ],
+    "deco" : "i",
+    "init" : "30"
+   },
+   {
+    "name" : "PATTERN_TILE_SIZE",
+    "kind" : "variable",
+    "line" : 30,
+    "storageClass" : [
+     "enum"
+    ],
+    "deco" : "i",
+    "init" : "16"
+   },
+   {
+    "name" : "ATTR_TABLE_INDEX",
+    "kind" : "variable",
+    "line" : 32,
+    "storageClass" : [
+     "enum"
+    ],
+    "deco" : "G960h",
+    "init" : "[cast(ubyte)0u, cast(ubyte)0u, cast(ubyte)0u, cast(ubyte)0u, cast(ubyte)1u, cast(ubyte)1u, cast(ubyte)1u, cast(ubyte)1u, cast(ubyte)2u, cast(ubyte)2u, cast(ubyte)2u, cast(ubyte)2u, cast(ubyte)3u, cast(ubyte)3u, cast(ubyte)3u, cast(ubyte)3u, cast(ubyte)4u, cast(ubyte)4u, cast(ubyte)4u, cast(ubyte)4u, cast(ubyte)5u, cast(ubyte)5u, cast(ubyte)5u, cast(ubyte)5u, cast(ubyte)6u, cast(ubyte)6u, cast(ubyte)6u, cast(ubyte)6u, cast(ubyte)7u, cast(ubyte)7u, cast(ubyte)7u, cast(ubyte)7u, cast(ubyte)32u, cast(ubyte)32u, cast(ubyte)32u, cast(ubyte)32u, cast(ubyte)33u, cast(ubyte)33u, cast(ubyte)33u, cast(ubyte)33u, cast(ubyte)34u, cast(ubyte)34u, cast(ubyte)34u, cast(ubyte)34u, cast(ubyte)35u, cast(ubyte)35u, cast(ubyte)35u, cast(ubyte)35u, cast(ubyte)36u, cast(ubyte)36u, cast(ubyte)36u, cast(ubyte)36u, cast(ubyte)37u, cast(ubyte)37u, cast(ubyte)37u, cast(ubyte)37u, cast(ubyte)38u, cast(ubyte)38u, cast(ubyte)38u, cast(ubyte)38u, cast(ubyte)39u, cast(ubyte)39u, cast(ubyte)39u, cast(ubyte)39u, cast(ubyte)64u, cast(ubyte)64u, cast(ubyte)64u, cast(ubyte)64u, cast(ubyte)65u, cast(ubyte)65u, cast(ubyte)65u, cast(ubyte)65u, cast(ubyte)66u, cast(ubyte)66u, cast(ubyte)66u, cast(ubyte)66u, cast(ubyte)67u, cast(ubyte)67u, cast(ubyte)67u, cast(ubyte)67u, cast(ubyte)68u, cast(ubyte)68u, cast(ubyte)68u, cast(ubyte)68u, cast(ubyte)69u, cast(ubyte)69u, cast(ubyte)69u, cast(ubyte)69u, cast(ubyte)70u, cast(ubyte)70u, cast(ubyte)70u, cast(ubyte)70u, cast(ubyte)71u, cast(ubyte)71u, cast(ubyte)71u, cast(ubyte)71u, cast(ubyte)96u, cast(ubyte)96u, cast(ubyte)96u, cast(ubyte)96u, cast(ubyte)97u, cast(ubyte)97u, cast(ubyte)97u, cast(ubyte)97u, cast(ubyte)98u, cast(ubyte)98u, cast(ubyte)98u, cast(ubyte)98u, cast(ubyte)99u, cast(ubyte)99u, cast(ubyte)99u, cast(ubyte)99u, cast(ubyte)100u, cast(ubyte)100u, cast(ubyte)100u, cast(ubyte)100u, cast(ubyte)101u, cast(ubyte)101u, cast(ubyte)101u, cast(ubyte)101u, cast(ubyte)102u, cast(ubyte)102u, cast(ubyte)102u, cast(ubyte)102u, cast(ubyte)103u, cast(ubyte)103u, cast(ubyte)103u, cast(ubyte)103u, cast(ubyte)128u, cast(ubyte)128u, cast(ubyte)128u, cast(ubyte)128u, cast(ubyte)129u, cast(ubyte)129u, cast(ubyte)129u, cast(ubyte)129u, cast(ubyte)130u, cast(ubyte)130u, cast(ubyte)130u, cast(ubyte)130u, cast(ubyte)131u, cast(ubyte)131u, cast(ubyte)131u, cast(ubyte)131u, cast(ubyte)132u, cast(ubyte)132u, cast(ubyte)132u, cast(ubyte)132u, cast(ubyte)133u, cast(ubyte)133u, cast(ubyte)133u, cast(ubyte)133u, cast(ubyte)134u, cast(ubyte)134u, cast(ubyte)134u, cast(ubyte)134u, cast(ubyte)135u, cast(ubyte)135u, cast(ubyte)135u, cast(ubyte)135u, cast(ubyte)160u, cast(ubyte)160u, cast(ubyte)160u, cast(ubyte)160u, cast(ubyte)161u, cast(ubyte)161u, cast(ubyte)161u, cast(ubyte)161u, cast(ubyte)162u, cast(ubyte)162u, cast(ubyte)162u, cast(ubyte)162u, cast(ubyte)163u, cast(ubyte)163u, cast(ubyte)163u, cast(ubyte)163u, cast(ubyte)164u, cast(ubyte)164u, cast(ubyte)164u, cast(ubyte)164u, cast(ubyte)165u, cast(ubyte)165u, cast(ubyte)165u, cast(ubyte)165u, cast(ubyte)166u, cast(ubyte)166u, cast(ubyte)166u, cast(ubyte)166u, cast(ubyte)167u, cast(ubyte)167u, cast(ubyte)167u, cast(ubyte)167u, cast(ubyte)192u, cast(ubyte)192u, cast(ubyte)192u, cast(ubyte)192u, cast(ubyte)193u, cast(ubyte)193u, cast(ubyte)193u, cast(ubyte)193u, cast(ubyte)194u, cast(ubyte)194u, cast(ubyte)194u, cast(ubyte)194u, cast(ubyte)195u, cast(ubyte)195u, cast(ubyte)195u, cast(ubyte)195u, cast(ubyte)196u, cast(ubyte)196u, cast(ubyte)196u, cast(ubyte)196u, cast(ubyte)197u, cast(ubyte)197u, cast(ubyte)197u, cast(ubyte)197u, cast(ubyte)198u, cast(ubyte)198u, cast(ubyte)198u, cast(ubyte)198u, cast(ubyte)199u, cast(ubyte)199u, cast(ubyte)199u, cast(ubyte)199u, cast(ubyte)224u, cast(ubyte)224u, cast(ubyte)224u, cast(ubyte)224u, cast(ubyte)225u, cast(ubyte)225u, cast(ubyte)225u, cast(ubyte)225u, cast(ubyte)226u, cast(ubyte)226u, cast(ubyte)226u, cast(ubyte)226u, cast(ubyte)227u, cast(ubyte)227u, cast(ubyte)227u, cast(ubyte)227u, cast(ubyte)228u, cast(ubyte)228u, cast(ubyte)228u, cast(ubyte)228u, cast(ubyte)229u, cast(ubyte)229u, cast(ubyte)229u, cast(ubyte)229u, cast(ubyte)230u, cast(ubyte)230u, cast(ubyte)230u, cast(ubyte)230u, cast(ubyte)231u, cast(ubyte)231u, cast(ubyte)231u, cast(ubyte)231u, cast(ubyte)0u, cast(ubyte)0u, cast(ubyte)0u, cast(ubyte)0u, cast(ubyte)1u, cast(ubyte)1u, cast(ubyte)1u, cast(ubyte)1u, cast(ubyte)2u, cast(ubyte)2u, cast(ubyte)2u, cast(ubyte)2u, cast(ubyte)3u, cast(ubyte)3u, cast(ubyte)3u, cast(ubyte)3u, cast(ubyte)4u, cast(ubyte)4u, cast(ubyte)4u, cast(ubyte)4u, cast(ubyte)5u, cast(ubyte)5u, cast(ubyte)5u, cast(ubyte)5u, cast(ubyte)6u, cast(ubyte)6u, cast(ubyte)6u, cast(ubyte)6u, cast(ubyte)7u, cast(ubyte)7u, cast(ubyte)7u, cast(ubyte)7u, cast(ubyte)32u, cast(ubyte)32u, cast(ubyte)32u, cast(ubyte)32u, cast(ubyte)33u, cast(ubyte)33u, cast(ubyte)33u, cast(ubyte)33u, cast(ubyte)34u, cast(ubyte)34u, cast(ubyte)34u, cast(ubyte)34u, cast(ubyte)35u, cast(ubyte)35u, cast(ubyte)35u, cast(ubyte)35u, cast(ubyte)36u, cast(ubyte)36u, cast(ubyte)36u, cast(ubyte)36u, cast(ubyte)37u, cast(ubyte)37u, cast(ubyte)37u, cast(ubyte)37u, cast(ubyte)38u, cast(ubyte)38u, cast(ubyte)38u, cast(ubyte)38u, cast(ubyte)39u, cast(ubyte)39u, cast(ubyte)39u, cast(ubyte)39u, cast(ubyte)64u, cast(ubyte)64u, cast(ubyte)64u, cast(ubyte)64u, cast(ubyte)65u, cast(ubyte)65u, cast(ubyte)65u, cast(ubyte)65u, cast(ubyte)66u, cast(ubyte)66u, cast(ubyte)66u, cast(ubyte)66u, cast(ubyte)67u, cast(ubyte)67u, cast(ubyte)67u, cast(ubyte)67u, cast(ubyte)68u, cast(ubyte)68u, cast(ubyte)68u, cast(ubyte)68u, cast(ubyte)69u, cast(ubyte)69u, cast(ubyte)69u, cast(ubyte)69u, cast(ubyte)70u, cast(ubyte)70u, cast(ubyte)70u, cast(ubyte)70u, cast(ubyte)71u, cast(ubyte)71u, cast(ubyte)71u, cast(ubyte)71u, cast(ubyte)96u, cast(ubyte)96u, cast(ubyte)96u, cast(ubyte)96u, cast(ubyte)97u, cast(ubyte)97u, cast(ubyte)97u, cast(ubyte)97u, cast(ubyte)98u, cast(ubyte)98u, cast(ubyte)98u, cast(ubyte)98u, cast(ubyte)99u, cast(ubyte)99u, cast(ubyte)99u, cast(ubyte)99u, cast(ubyte)100u, cast(ubyte)100u, cast(ubyte)100u, cast(ubyte)100u, cast(ubyte)101u, cast(ubyte)101u, cast(ubyte)101u, cast(ubyte)101u, cast(ubyte)102u, cast(ubyte)102u, cast(ubyte)102u, cast(ubyte)102u, cast(ubyte)103u, cast(ubyte)103u, cast(ubyte)103u, cast(ubyte)103u, cast(ubyte)128u, cast(ubyte)128u, cast(ubyte)128u, cast(ubyte)128u, cast(ubyte)129u, cast(ubyte)129u, cast(ubyte)129u, cast(ubyte)129u, cast(ubyte)130u, cast(ubyte)130u, cast(ubyte)130u, cast(ubyte)130u, cast(ubyte)131u, cast(ubyte)131u, cast(ubyte)131u, cast(ubyte)131u, cast(ubyte)132u, cast(ubyte)132u, cast(ubyte)132u, cast(ubyte)132u, cast(ubyte)133u, cast(ubyte)133u, cast(ubyte)133u, cast(ubyte)133u, cast(ubyte)134u, cast(ubyte)134u, cast(ubyte)134u, cast(ubyte)134u, cast(ubyte)135u, cast(ubyte)135u, cast(ubyte)135u, cast(ubyte)135u, cast(ubyte)160u, cast(ubyte)160u, cast(ubyte)160u, cast(ubyte)160u, cast(ubyte)161u, cast(ubyte)161u, cast(ubyte)161u, cast(ubyte)161u, cast(ubyte)162u, cast(ubyte)162u, cast(ubyte)162u, cast(ubyte)162u, cast(ubyte)163u, cast(ubyte)163u, cast(ubyte)163u, cast(ubyte)163u, cast(ubyte)164u, cast(ubyte)164u, cast(ubyte)164u, cast(ubyte)164u, cast(ubyte)165u, cast(ubyte)165u, cast(ubyte)165u, cast(ubyte)165u, cast(ubyte)166u, cast(ubyte)166u, cast(ubyte)166u, cast(ubyte)166u, cast(ubyte)167u, cast(ubyte)167u, cast(ubyte)167u, cast(ubyte)167u, cast(ubyte)192u, cast(ubyte)192u, cast(ubyte)192u, cast(ubyte)192u, cast(ubyte)193u, cast(ubyte)193u, cast(ubyte)193u, cast(ubyte)193u, cast(ubyte)194u, cast(ubyte)194u, cast(ubyte)194u, cast(ubyte)194u, cast(ubyte)195u, cast(ubyte)195u, cast(ubyte)195u, cast(ubyte)195u, cast(ubyte)196u, cast(ubyte)196u, cast(ubyte)196u, cast(ubyte)196u, cast(ubyte)197u, cast(ubyte)197u, cast(ubyte)197u, cast(ubyte)197u, cast(ubyte)198u, cast(ubyte)198u, cast(ubyte)198u, cast(ubyte)198u, cast(ubyte)199u, cast(ubyte)199u, cast(ubyte)199u, cast(ubyte)199u, cast(ubyte)224u, cast(ubyte)224u, cast(ubyte)224u, cast(ubyte)224u, cast(ubyte)225u, cast(ubyte)225u, cast(ubyte)225u, cast(ubyte)225u, cast(ubyte)226u, cast(ubyte)226u, cast(ubyte)226u, cast(ubyte)226u, cast(ubyte)227u, cast(ubyte)227u, cast(ubyte)227u, cast(ubyte)227u, cast(ubyte)228u, cast(ubyte)228u, cast(ubyte)228u, cast(ubyte)228u, cast(ubyte)229u, cast(ubyte)229u, cast(ubyte)229u, cast(ubyte)229u, cast(ubyte)230u, cast(ubyte)230u, cast(ubyte)230u, cast(ubyte)230u, cast(ubyte)231u, cast(ubyte)231u, cast(ubyte)231u, cast(ubyte)231u, cast(ubyte)0u, cast(ubyte)0u, cast(ubyte)0u, cast(ubyte)0u, cast(ubyte)1u, cast(ubyte)1u, cast(ubyte)1u, cast(ubyte)1u, cast(ubyte)2u, cast(ubyte)2u, cast(ubyte)2u, cast(ubyte)2u, cast(ubyte)3u, cast(ubyte)3u, cast(ubyte)3u, cast(ubyte)3u, cast(ubyte)4u, cast(ubyte)4u, cast(ubyte)4u, cast(ubyte)4u, cast(ubyte)5u, cast(ubyte)5u, cast(ubyte)5u, cast(ubyte)5u, cast(ubyte)6u, cast(ubyte)6u, cast(ubyte)6u, cast(ubyte)6u, cast(ubyte)7u, cast(ubyte)7u, cast(ubyte)7u, cast(ubyte)7u, cast(ubyte)32u, cast(ubyte)32u, cast(ubyte)32u, cast(ubyte)32u, cast(ubyte)33u, cast(ubyte)33u, cast(ubyte)33u, cast(ubyte)33u, cast(ubyte)34u, cast(ubyte)34u, cast(ubyte)34u, cast(ubyte)34u, cast(ubyte)35u, cast(ubyte)35u, cast(ubyte)35u, cast(ubyte)35u, cast(ubyte)36u, cast(ubyte)36u, cast(ubyte)36u, cast(ubyte)36u, cast(ubyte)37u, cast(ubyte)37u, cast(ubyte)37u, cast(ubyte)37u, cast(ubyte)38u, cast(ubyte)38u, cast(ubyte)38u, cast(ubyte)38u, cast(ubyte)39u, cast(ubyte)39u, cast(ubyte)39u, cast(ubyte)39u, cast(ubyte)64u, cast(ubyte)64u, cast(ubyte)64u, cast(ubyte)64u, cast(ubyte)65u, cast(ubyte)65u, cast(ubyte)65u, cast(ubyte)65u, cast(ubyte)66u, cast(ubyte)66u, cast(ubyte)66u, cast(ubyte)66u, cast(ubyte)67u, cast(ubyte)67u, cast(ubyte)67u, cast(ubyte)67u, cast(ubyte)68u, cast(ubyte)68u, cast(ubyte)68u, cast(ubyte)68u, cast(ubyte)69u, cast(ubyte)69u, cast(ubyte)69u, cast(ubyte)69u, cast(ubyte)70u, cast(ubyte)70u, cast(ubyte)70u, cast(ubyte)70u, cast(ubyte)71u, cast(ubyte)71u, cast(ubyte)71u, cast(ubyte)71u, cast(ubyte)96u, cast(ubyte)96u, cast(ubyte)96u, cast(ubyte)96u, cast(ubyte)97u, cast(ubyte)97u, cast(ubyte)97u, cast(ubyte)97u, cast(ubyte)98u, cast(ubyte)98u, cast(ubyte)98u, cast(ubyte)98u, cast(ubyte)99u, cast(ubyte)99u, cast(ubyte)99u, cast(ubyte)99u, cast(ubyte)100u, cast(ubyte)100u, cast(ubyte)100u, cast(ubyte)100u, cast(ubyte)101u, cast(ubyte)101u, cast(ubyte)101u, cast(ubyte)101u, cast(ubyte)102u, cast(ubyte)102u, cast(ubyte)102u, cast(ubyte)102u, cast(ubyte)103u, cast(ubyte)103u, cast(ubyte)103u, cast(ubyte)103u, cast(ubyte)128u, cast(ubyte)128u, cast(ubyte)128u, cast(ubyte)128u, cast(ubyte)129u, cast(ubyte)129u, cast(ubyte)129u, cast(ubyte)129u, cast(ubyte)130u, cast(ubyte)130u, cast(ubyte)130u, cast(ubyte)130u, cast(ubyte)131u, cast(ubyte)131u, cast(ubyte)131u, cast(ubyte)131u, cast(ubyte)132u, cast(ubyte)132u, cast(ubyte)132u, cast(ubyte)132u, cast(ubyte)133u, cast(ubyte)133u, cast(ubyte)133u, cast(ubyte)133u, cast(ubyte)134u, cast(ubyte)134u, cast(ubyte)134u, cast(ubyte)134u, cast(ubyte)135u, cast(ubyte)135u, cast(ubyte)135u, cast(ubyte)135u, cast(ubyte)160u, cast(ubyte)160u, cast(ubyte)160u, cast(ubyte)160u, cast(ubyte)161u, cast(ubyte)161u, cast(ubyte)161u, cast(ubyte)161u, cast(ubyte)162u, cast(ubyte)162u, cast(ubyte)162u, cast(ubyte)162u, cast(ubyte)163u, cast(ubyte)163u, cast(ubyte)163u, cast(ubyte)163u, cast(ubyte)164u, cast(ubyte)164u, cast(ubyte)164u, cast(ubyte)164u, cast(ubyte)165u, cast(ubyte)165u, cast(ubyte)165u, cast(ubyte)165u, cast(ubyte)166u, cast(ubyte)166u, cast(ubyte)166u, cast(ubyte)166u, cast(ubyte)167u, cast(ubyte)167u, cast(ubyte)167u, cast(ubyte)167u, cast(ubyte)192u, cast(ubyte)192u, cast(ubyte)192u, cast(ubyte)192u, cast(ubyte)193u, cast(ubyte)193u, cast(ubyte)193u, cast(ubyte)193u, cast(ubyte)194u, cast(ubyte)194u, cast(ubyte)194u, cast(ubyte)194u, cast(ubyte)195u, cast(ubyte)195u, cast(ubyte)195u, cast(ubyte)195u, cast(ubyte)196u, cast(ubyte)196u, cast(ubyte)196u, cast(ubyte)196u, cast(ubyte)197u, cast(ubyte)197u, cast(ubyte)197u, cast(ubyte)197u, cast(ubyte)198u, cast(ubyte)198u, cast(ubyte)198u, cast(ubyte)198u, cast(ubyte)199u, cast(ubyte)199u, cast(ubyte)199u, cast(ubyte)199u, cast(ubyte)224u, cast(ubyte)224u, cast(ubyte)224u, cast(ubyte)224u, cast(ubyte)225u, cast(ubyte)225u, cast(ubyte)225u, cast(ubyte)225u, cast(ubyte)226u, cast(ubyte)226u, cast(ubyte)226u, cast(ubyte)226u, cast(ubyte)227u, cast(ubyte)227u, cast(ubyte)227u, cast(ubyte)227u, cast(ubyte)228u, cast(ubyte)228u, cast(ubyte)228u, cast(ubyte)228u, cast(ubyte)229u, cast(ubyte)229u, cast(ubyte)229u, cast(ubyte)229u, cast(ubyte)230u, cast(ubyte)230u, cast(ubyte)230u, cast(ubyte)230u, cast(ubyte)231u, cast(ubyte)231u, cast(ubyte)231u, cast(ubyte)231u, cast(ubyte)0u, cast(ubyte)0u, cast(ubyte)0u, cast(ubyte)0u, cast(ubyte)1u, cast(ubyte)1u, cast(ubyte)1u, cast(ubyte)1u, cast(ubyte)2u, cast(ubyte)2u, cast(ubyte)2u, cast(ubyte)2u, cast(ubyte)3u, cast(ubyte)3u, cast(ubyte)3u, cast(ubyte)3u, cast(ubyte)4u, cast(ubyte)4u, cast(ubyte)4u, cast(ubyte)4u, cast(ubyte)5u, cast(ubyte)5u, cast(ubyte)5u, cast(ubyte)5u, cast(ubyte)6u, cast(ubyte)6u, cast(ubyte)6u, cast(ubyte)6u, cast(ubyte)7u, cast(ubyte)7u, cast(ubyte)7u, cast(ubyte)7u, cast(ubyte)32u, cast(ubyte)32u, cast(ubyte)32u, cast(ubyte)32u, cast(ubyte)33u, cast(ubyte)33u, cast(ubyte)33u, cast(ubyte)33u, cast(ubyte)34u, cast(ubyte)34u, cast(ubyte)34u, cast(ubyte)34u, cast(ubyte)35u, cast(ubyte)35u, cast(ubyte)35u, cast(ubyte)35u, cast(ubyte)36u, cast(ubyte)36u, cast(ubyte)36u, cast(ubyte)36u, cast(ubyte)37u, cast(ubyte)37u, cast(ubyte)37u, cast(ubyte)37u, cast(ubyte)38u, cast(ubyte)38u, cast(ubyte)38u, cast(ubyte)38u, cast(ubyte)39u, cast(ubyte)39u, cast(ubyte)39u, cast(ubyte)39u, cast(ubyte)64u, cast(ubyte)64u, cast(ubyte)64u, cast(ubyte)64u, cast(ubyte)65u, cast(ubyte)65u, cast(ubyte)65u, cast(ubyte)65u, cast(ubyte)66u, cast(ubyte)66u, cast(ubyte)66u, cast(ubyte)66u, cast(ubyte)67u, cast(ubyte)67u, cast(ubyte)67u, cast(ubyte)67u, cast(ubyte)68u, cast(ubyte)68u, cast(ubyte)68u, cast(ubyte)68u, cast(ubyte)69u, cast(ubyte)69u, cast(ubyte)69u, cast(ubyte)69u, cast(ubyte)70u, cast(ubyte)70u, cast(ubyte)70u, cast(ubyte)70u, cast(ubyte)71u, cast(ubyte)71u, cast(ubyte)71u, cast(ubyte)71u, cast(ubyte)96u, cast(ubyte)96u, cast(ubyte)96u, cast(ubyte)96u, cast(ubyte)97u, cast(ubyte)97u, cast(ubyte)97u, cast(ubyte)97u, cast(ubyte)98u, cast(ubyte)98u, cast(ubyte)98u, cast(ubyte)98u, cast(ubyte)99u, cast(ubyte)99u, cast(ubyte)99u, cast(ubyte)99u, cast(ubyte)100u, cast(ubyte)100u, cast(ubyte)100u, cast(ubyte)100u, cast(ubyte)101u, cast(ubyte)101u, cast(ubyte)101u, cast(ubyte)101u, cast(ubyte)102u, cast(ubyte)102u, cast(ubyte)102u, cast(ubyte)102u, cast(ubyte)103u, cast(ubyte)103u, cast(ubyte)103u, cast(ubyte)103u, cast(ubyte)128u, cast(ubyte)128u, cast(ubyte)128u, cast(ubyte)128u, cast(ubyte)129u, cast(ubyte)129u, cast(ubyte)129u, cast(ubyte)129u, cast(ubyte)130u, cast(ubyte)130u, cast(ubyte)130u, cast(ubyte)130u, cast(ubyte)131u, cast(ubyte)131u, cast(ubyte)131u, cast(ubyte)131u, cast(ubyte)132u, cast(ubyte)132u, cast(ubyte)132u, cast(ubyte)132u, cast(ubyte)133u, cast(ubyte)133u, cast(ubyte)133u, cast(ubyte)133u, cast(ubyte)134u, cast(ubyte)134u, cast(ubyte)134u, cast(ubyte)134u, cast(ubyte)135u, cast(ubyte)135u, cast(ubyte)135u, cast(ubyte)135u, cast(ubyte)160u, cast(ubyte)160u, cast(ubyte)160u, cast(ubyte)160u, cast(ubyte)161u, cast(ubyte)161u, cast(ubyte)161u, cast(ubyte)161u, cast(ubyte)162u, cast(ubyte)162u, cast(ubyte)162u, cast(ubyte)162u, cast(ubyte)163u, cast(ubyte)163u, cast(ubyte)163u, cast(ubyte)163u, cast(ubyte)164u, cast(ubyte)164u, cast(ubyte)164u, cast(ubyte)164u, cast(ubyte)165u, cast(ubyte)165u, cast(ubyte)165u, cast(ubyte)165u, cast(ubyte)166u, cast(ubyte)166u, cast(ubyte)166u, cast(ubyte)166u, cast(ubyte)167u, cast(ubyte)167u, cast(ubyte)167u, cast(ubyte)167u]"
+   },
+   {
+    "name" : "isOAMHFlipped",
+    "kind" : "function",
+    "line" : 34,
+    "deco" : "FNaNbhZb",
+    "parameters" : [
+     {
+      "name" : "attributes",
+      "deco" : "h"
+     }
+    ],
+    "endline" : 34
+   },
+   {
+    "name" : "isOAMVFlipped",
+    "kind" : "function",
+    "line" : 36,
+    "deco" : "FNaNbhZb",
+    "parameters" : [
+     {
+      "name" : "attributes",
+      "deco" : "h"
+     }
+    ],
+    "endline" : 36
+   },
+   {
+    "name" : "isOAMPrioritary",
+    "kind" : "function",
+    "line" : 38,
+    "deco" : "FNaNbhZb",
+    "parameters" : [
+     {
+      "name" : "attributes",
+      "deco" : "h"
+     }
+    ],
+    "endline" : 38
+   },
+   {
+    "name" : "SpriteSize",
+    "kind" : "enum",
+    "line" : 41,
+    "baseDeco" : "i",
+    "members" : [
+     {
+      "name" : "SINGLE",
+      "kind" : "enum member",
+      "line" : 43
+     },
+     {
+      "name" : "DOUBLE",
+      "kind" : "enum member",
+      "line" : 44
+     }
+    ]
+   },
+   {
+    "name" : "hsvToRgb",
+    "kind" : "function",
+    "line" : 58,
+    "deco" : "FNaNbhZk",
+    "parameters" : [
+     {
+      "name" : "hsv",
+      "deco" : "h"
+     }
+    ],
+    "endline" : 84
+   },
+   {
+    "name" : "TableMirroring",
+    "kind" : "enum",
+    "line" : 86,
+    "baseDeco" : "i",
+    "members" : [
+     {
+      "name" : "HORIZONTAL",
+      "kind" : "enum member",
+      "line" : 88
+     },
+     {
+      "name" : "VERTICAL",
+      "kind" : "enum member",
+      "line" : 89
+     },
+     {
+      "name" : "SINGLE_SCREEN",
+      "kind" : "enum member",
+      "line" : 90
+     },
+     {
+      "name" : "FOUR_SCREEN",
+      "kind" : "enum member",
+      "line" : 91
+     }
+    ]
+   },
+   {
+    "name" : "buildAttrTableIndex",
+    "kind" : "function",
+    "protection" : "private",
+    "line" : 98,
+    "deco" : "FZG960h",
+    "endline" : 113
+   },
+   {
+    "name" : "buildBitToByteTable",
+    "kind" : "function",
+    "protection" : "private",
+    "line" : 118,
+    "deco" : "FZG256m",
+    "endline" : 133
+   },
+   {
+    "name" : "bitToByte",
+    "kind" : "variable",
+    "protection" : "private",
+    "line" : 136,
+    "storageClass" : [
+     "enum"
+    ],
+    "deco" : "G256m",
+    "init" : "[0LU, 72057594037927936LU, 281474976710656LU, 72339069014638592LU, 1099511627776LU, 72058693549555712LU, 282574488338432LU, 72340168526266368LU, 4294967296LU, 72057598332895232LU, 281479271677952LU, 72339073309605888LU, 1103806595072LU, 72058697844523008LU, 282578783305728LU, 72340172821233664LU, 16777216LU, 72057594054705152LU, 281474993487872LU, 72339069031415808LU, 1099528404992LU, 72058693566332928LU, 282574505115648LU, 72340168543043584LU, 4311744512LU, 72057598349672448LU, 281479288455168LU, 72339073326383104LU, 1103823372288LU, 72058697861300224LU, 282578800082944LU, 72340172838010880LU, 65536LU, 72057594037993472LU, 281474976776192LU, 72339069014704128LU, 1099511693312LU, 72058693549621248LU, 282574488403968LU, 72340168526331904LU, 4295032832LU, 72057598332960768LU, 281479271743488LU, 72339073309671424LU, 1103806660608LU, 72058697844588544LU, 282578783371264LU, 72340172821299200LU, 16842752LU, 72057594054770688LU, 281474993553408LU, 72339069031481344LU, 1099528470528LU, 72058693566398464LU, 282574505181184LU, 72340168543109120LU, 4311810048LU, 72057598349737984LU, 281479288520704LU, 72339073326448640LU, 1103823437824LU, 72058697861365760LU, 282578800148480LU, 72340172838076416LU, 256LU, 72057594037928192LU, 281474976710912LU, 72339069014638848LU, 1099511628032LU, 72058693549555968LU, 282574488338688LU, 72340168526266624LU, 4294967552LU, 72057598332895488LU, 281479271678208LU, 72339073309606144LU, 1103806595328LU, 72058697844523264LU, 282578783305984LU, 72340172821233920LU, 16777472LU, 72057594054705408LU, 281474993488128LU, 72339069031416064LU, 1099528405248LU, 72058693566333184LU, 282574505115904LU, 72340168543043840LU, 4311744768LU, 72057598349672704LU, 281479288455424LU, 72339073326383360LU, 1103823372544LU, 72058697861300480LU, 282578800083200LU, 72340172838011136LU, 65792LU, 72057594037993728LU, 281474976776448LU, 72339069014704384LU, 1099511693568LU, 72058693549621504LU, 282574488404224LU, 72340168526332160LU, 4295033088LU, 72057598332961024LU, 281479271743744LU, 72339073309671680LU, 1103806660864LU, 72058697844588800LU, 282578783371520LU, 72340172821299456LU, 16843008LU, 72057594054770944LU, 281474993553664LU, 72339069031481600LU, 1099528470784LU, 72058693566398720LU, 282574505181440LU, 72340168543109376LU, 4311810304LU, 72057598349738240LU, 281479288520960LU, 72339073326448896LU, 1103823438080LU, 72058697861366016LU, 282578800148736LU, 72340172838076672LU, 1LU, 72057594037927937LU, 281474976710657LU, 72339069014638593LU, 1099511627777LU, 72058693549555713LU, 282574488338433LU, 72340168526266369LU, 4294967297LU, 72057598332895233LU, 281479271677953LU, 72339073309605889LU, 1103806595073LU, 72058697844523009LU, 282578783305729LU, 72340172821233665LU, 16777217LU, 72057594054705153LU, 281474993487873LU, 72339069031415809LU, 1099528404993LU, 72058693566332929LU, 282574505115649LU, 72340168543043585LU, 4311744513LU, 72057598349672449LU, 281479288455169LU, 72339073326383105LU, 1103823372289LU, 72058697861300225LU, 282578800082945LU, 72340172838010881LU, 65537LU, 72057594037993473LU, 281474976776193LU, 72339069014704129LU, 1099511693313LU, 72058693549621249LU, 282574488403969LU, 72340168526331905LU, 4295032833LU, 72057598332960769LU, 281479271743489LU, 72339073309671425LU, 1103806660609LU, 72058697844588545LU, 282578783371265LU, 72340172821299201LU, 16842753LU, 72057594054770689LU, 281474993553409LU, 72339069031481345LU, 1099528470529LU, 72058693566398465LU, 282574505181185LU, 72340168543109121LU, 4311810049LU, 72057598349737985LU, 281479288520705LU, 72339073326448641LU, 1103823437825LU, 72058697861365761LU, 282578800148481LU, 72340172838076417LU, 257LU, 72057594037928193LU, 281474976710913LU, 72339069014638849LU, 1099511628033LU, 72058693549555969LU, 282574488338689LU, 72340168526266625LU, 4294967553LU, 72057598332895489LU, 281479271678209LU, 72339073309606145LU, 1103806595329LU, 72058697844523265LU, 282578783305985LU, 72340172821233921LU, 16777473LU, 72057594054705409LU, 281474993488129LU, 72339069031416065LU, 1099528405249LU, 72058693566333185LU, 282574505115905LU, 72340168543043841LU, 4311744769LU, 72057598349672705LU, 281479288455425LU, 72339073326383361LU, 1103823372545LU, 72058697861300481LU, 282578800083201LU, 72340172838011137LU, 65793LU, 72057594037993729LU, 281474976776449LU, 72339069014704385LU, 1099511693569LU, 72058693549621505LU, 282574488404225LU, 72340168526332161LU, 4295033089LU, 72057598332961025LU, 281479271743745LU, 72339073309671681LU, 1103806660865LU, 72058697844588801LU, 282578783371521LU, 72340172821299457LU, 16843009LU, 72057594054770945LU, 281474993553665LU, 72339069031481601LU, 1099528470785LU, 72058693566398721LU, 282574505181441LU, 72340168543109377LU, 4311810305LU, 72057598349738241LU, 281479288520961LU, 72339073326448897LU, 1103823438081LU, 72058697861366017LU, 282578800148737LU, 72340172838076673LU]"
+   },
+   {
+    "name" : "patternTableAccess",
+    "kind" : "function",
+    "line" : 145,
+    "deco" : "FxAhJG64hZv",
+    "originalType" : "void(const ubyte[] memory, out ubyte[64] tile)",
+    "parameters" : [
+     {
+      "name" : "memory",
+      "deco" : "xAh"
+     },
+     {
+      "name" : "tile",
+      "deco" : "G64h",
+      "storageClass" : [
+       "out"
+      ]
+     }
+    ],
+    "endline" : 166
+   },
+   {
+    "name" : "__unittestL168_1",
+    "kind" : "function",
+    "line" : 168,
+    "endline" : 203
+   },
+   {
+    "name" : "attributeTableAccess",
+    "kind" : "function",
+    "line" : 203,
+    "deco" : "FxAhkkZh",
+    "originalType" : "ubyte(const ubyte[] attrTable, size_t xTile, size_t yTile)",
+    "parameters" : [
+     {
+      "name" : "attrTable",
+      "deco" : "xAh"
+     },
+     {
+      "name" : "xTile",
+      "deco" : "k"
+     },
+     {
+      "name" : "yTile",
+      "deco" : "k"
+     }
+    ],
+    "endline" : 239
+   },
+   {
+    "name" : "hflip",
+    "kind" : "function",
+    "line" : 244,
+    "deco" : "FNaKG64hZv",
+    "parameters" : [
+     {
+      "name" : "tile",
+      "deco" : "G64h",
+      "storageClass" : [
+       "ref"
+      ]
+     }
+    ],
+    "endline" : 254
+   },
+   {
+    "name" : "__unittestL257_2",
+    "kind" : "function",
+    "line" : 257,
+    "endline" : 284
+   },
+   {
+    "name" : "vflip",
+    "kind" : "function",
+    "line" : 284,
+    "deco" : "FNaKG64hZv",
+    "parameters" : [
+     {
+      "name" : "tile",
+      "deco" : "G64h",
+      "storageClass" : [
+       "ref"
+      ]
+     }
+    ],
+    "endline" : 293
+   },
+   {
+    "name" : "__unittestL295_3",
+    "kind" : "function",
+    "line" : 295,
+    "endline" : 319
+   },
+   {
+    "name" : "SpriteInfo",
+    "kind" : "struct",
+    "line" : 319,
+    "members" : [
+     {
+      "name" : "priority",
+      "kind" : "variable",
+      "line" : 321,
+      "deco" : "b",
+      "offset" : 0
+     },
+     {
+      "name" : "index",
+      "kind" : "variable",
+      "line" : 322,
+      "deco" : "h",
+      "offset" : 1
+     },
+     {
+      "name" : "left",
+      "kind" : "variable",
+      "line" : 323,
+      "deco" : "h",
+      "offset" : 2
+     },
+     {
+      "name" : "top",
+      "kind" : "variable",
+      "line" : 324,
+      "deco" : "h",
+      "offset" : 3
+     },
+     {
+      "name" : "priorityScore",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 326,
+      "deco" : "xFZi",
+      "endline" : 331
+     },
+     {
+      "name" : "opCmp",
+      "kind" : "function",
+      "line" : 333,
+      "deco" : "xFKxS3ppu10SpriteInfoZi",
+      "originalType" : "const int(ref const SpriteInfo other)",
+      "parameters" : [
+       {
+        "name" : "other",
+        "deco" : "xS3ppu10SpriteInfo",
+        "storageClass" : [
+         "ref"
+        ]
+       }
+      ],
+      "endline" : 336
+     }
+    ]
+   },
+   {
+    "name" : "m_spriteinfos",
+    "kind" : "variable",
+    "line" : 339,
+    "deco" : "G64S3ppu10SpriteInfo"
+   },
+   {
+    "name" : "PPU",
+    "kind" : "class",
+    "line" : 344,
+    "members" : [
+     {
+      "name" : "m_patternTables",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 347,
+      "deco" : "G8192h",
+      "offset" : 8
+     },
+     {
+      "name" : "m_nameAttrTable1",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 348,
+      "deco" : "G1024h",
+      "offset" : 8200
+     },
+     {
+      "name" : "m_nameAttrTable2",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 349,
+      "deco" : "G1024h",
+      "offset" : 9224
+     },
+     {
+      "name" : "m_palette",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 350,
+      "deco" : "G32h",
+      "offset" : 10248
+     },
+     {
+      "name" : "m_spriteRAM",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 351,
+      "deco" : "G256h",
+      "offset" : 10280
+     },
+     {
+      "name" : "m_spriteRAMAddress",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 353,
+      "deco" : "h",
+      "offset" : 10536
+     },
+     {
+      "name" : "nametableAdresses",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 355,
+      "storageClass" : [
+       "static",
+       "immutable"
+      ],
+      "deco" : "yAi",
+      "originalType" : "int[]",
+      "init" : "[8192, 9216, 10240, 11264]"
+     },
+     {
+      "name" : "baseNameTableAddress",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 357,
+      "deco" : "k",
+      "originalType" : "size_t",
+      "offset" : 10540
+     },
+     {
+      "name" : "vramAddressIncrement",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 359,
+      "deco" : "k",
+      "originalType" : "size_t",
+      "offset" : 10544
+     },
+     {
+      "name" : "spritePatternTableAddress",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 361,
+      "deco" : "k",
+      "originalType" : "size_t",
+      "offset" : 10548
+     },
+     {
+      "name" : "bgPatternTableAddress",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 363,
+      "deco" : "k",
+      "originalType" : "size_t",
+      "offset" : 10552
+     },
+     {
+      "name" : "spriteSize",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 365,
+      "deco" : "E3ppu10SpriteSize",
+      "offset" : 10556
+     },
+     {
+      "name" : "mirroring",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 367,
+      "deco" : "E3ppu14TableMirroring",
+      "offset" : 10560
+     },
+     {
+      "name" : "verticalBlankNMIGeneration",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 369,
+      "deco" : "b",
+      "offset" : 10564
+     },
+     {
+      "name" : "bg0",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 372,
+      "deco" : "PS8derelict4sdl25types11SDL_Surface",
+      "offset" : 10568
+     },
+     {
+      "name" : "bg1",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 375,
+      "deco" : "PS8derelict4sdl25types11SDL_Surface",
+      "offset" : 10572
+     },
+     {
+      "name" : "sprites",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 378,
+      "deco" : "PS8derelict4sdl25types11SDL_Surface",
+      "offset" : 10576
+     },
+     {
+      "name" : "sdlTile",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 380,
+      "deco" : "PS8derelict4sdl25types11SDL_Surface",
+      "offset" : 10580
+     },
+     {
+      "name" : "needRedraw",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 382,
+      "deco" : "b",
+      "offset" : 10584
+     },
+     {
+      "name" : "drawNameTable",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 384,
+      "deco" : "FxAhPS8derelict4sdl25types11SDL_SurfaceZv",
+      "originalType" : "void(const ubyte[] nameTable, SDL_Surface* bg)",
+      "parameters" : [
+       {
+        "name" : "nameTable",
+        "deco" : "xAh"
+       },
+       {
+        "name" : "bg",
+        "deco" : "PS8derelict4sdl25types11SDL_Surface"
+       }
+      ],
+      "endline" : 426
+     },
+     {
+      "name" : "selectColor",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 431,
+      "deco" : "xFNbhZk",
+      "parameters" : [
+       {
+        "name" : "colorIndex",
+        "deco" : "h"
+       }
+      ],
+      "endline" : 443
+     },
+     {
+      "name" : "drawBackground",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 445,
+      "deco" : "FPS8derelict4sdl25types11SDL_SurfaceZv",
+      "parameters" : [
+       {
+        "name" : "display",
+        "deco" : "PS8derelict4sdl25types11SDL_Surface"
+       }
+      ],
+      "endline" : 490
+     },
+     {
+      "name" : "drawSprites",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 492,
+      "deco" : "FPS8derelict4sdl25types11SDL_SurfacekbZk",
+      "originalType" : "size_t(SDL_Surface* display, size_t fromIndex, bool priority)",
+      "parameters" : [
+       {
+        "name" : "display",
+        "deco" : "PS8derelict4sdl25types11SDL_Surface"
+       },
+       {
+        "name" : "fromIndex",
+        "deco" : "k"
+       },
+       {
+        "name" : "priority",
+        "deco" : "b"
+       }
+      ],
+      "endline" : 512
+     },
+     {
+      "name" : "decodeSprites",
+      "kind" : "function",
+      "protection" : "private",
+      "line" : 514,
+      "deco" : "FZv",
+      "endline" : 590
+     },
+     {
+      "name" : "this",
+      "kind" : "constructor",
+      "line" : 594,
+      "deco" : "FZC3ppu3PPU",
+      "originalType" : "()",
+      "endline" : 607
+     },
+     {
+      "name" : "opIndex",
+      "kind" : "function",
+      "line" : 609,
+      "deco" : "xFkZh",
+      "originalType" : "const ubyte(size_t index)",
+      "parameters" : [
+       {
+        "name" : "index",
+        "deco" : "k"
+       }
+      ],
+      "endline" : 679
+     },
+     {
+      "name" : "opIndexAssign",
+      "kind" : "function",
+      "line" : 681,
+      "deco" : "FhkZh",
+      "originalType" : "ubyte(ubyte value, size_t index)",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "h"
+       },
+       {
+        "name" : "index",
+        "deco" : "k"
+       }
+      ],
+      "endline" : 753
+     },
+     {
+      "name" : "control",
+      "kind" : "function",
+      "line" : 770,
+      "deco" : "FhZv",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "h"
+       }
+      ],
+      "endline" : 783
+     },
+     {
+      "name" : "grayscale",
+      "kind" : "variable",
+      "line" : 785,
+      "deco" : "b",
+      "offset" : 10585
+     },
+     {
+      "name" : "showLeftMostBackground",
+      "kind" : "variable",
+      "line" : 787,
+      "deco" : "b",
+      "offset" : 10586
+     },
+     {
+      "name" : "showLeftMostSprites",
+      "kind" : "variable",
+      "line" : 789,
+      "deco" : "b",
+      "offset" : 10587
+     },
+     {
+      "name" : "showBackground",
+      "kind" : "variable",
+      "line" : 791,
+      "deco" : "b",
+      "offset" : 10588
+     },
+     {
+      "name" : "showSprites",
+      "kind" : "variable",
+      "line" : 793,
+      "deco" : "b",
+      "offset" : 10589
+     },
+     {
+      "name" : "intensifyReds",
+      "kind" : "variable",
+      "line" : 795,
+      "deco" : "b",
+      "offset" : 10590
+     },
+     {
+      "name" : "intensifyGreens",
+      "kind" : "variable",
+      "line" : 797,
+      "deco" : "b",
+      "offset" : 10591
+     },
+     {
+      "name" : "intensifyBlues",
+      "kind" : "variable",
+      "line" : 799,
+      "deco" : "b",
+      "offset" : 10592
+     },
+     {
+      "name" : "verticalScroll",
+      "kind" : "variable",
+      "line" : 801,
+      "deco" : "h",
+      "offset" : 10593
+     },
+     {
+      "name" : "horizontalScroll",
+      "kind" : "variable",
+      "line" : 803,
+      "deco" : "h",
+      "offset" : 10594
+     },
+     {
+      "name" : "vramAddress",
+      "kind" : "variable",
+      "line" : 805,
+      "deco" : "t",
+      "offset" : 10596
+     },
+     {
+      "name" : "mask",
+      "kind" : "function",
+      "line" : 820,
+      "deco" : "FhZv",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "h"
+       }
+      ],
+      "endline" : 833
+     },
+     {
+      "name" : "lastWritten",
+      "kind" : "variable",
+      "line" : 835,
+      "deco" : "h",
+      "offset" : 10598
+     },
+     {
+      "name" : "spriteOverflow",
+      "kind" : "variable",
+      "line" : 837,
+      "deco" : "b",
+      "offset" : 10599
+     },
+     {
+      "name" : "sprite0Hit",
+      "kind" : "variable",
+      "line" : 839,
+      "deco" : "b",
+      "offset" : 10600
+     },
+     {
+      "name" : "inVBlank",
+      "kind" : "variable",
+      "line" : 841,
+      "deco" : "b",
+      "offset" : 10601
+     },
+     {
+      "name" : "status",
+      "kind" : "function",
+      "line" : 857,
+      "deco" : "xFZh",
+      "endline" : 871
+     },
+     {
+      "name" : "spriteRAMAddress",
+      "kind" : "function",
+      "line" : 877,
+      "deco" : "FhZh",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "h"
+       }
+      ],
+      "endline" : 881
+     },
+     {
+      "name" : "spriteRAMValue",
+      "kind" : "function",
+      "line" : 887,
+      "deco" : "FhZh",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "h"
+       }
+      ],
+      "endline" : 891
+     },
+     {
+      "name" : "scroll",
+      "kind" : "function",
+      "line" : 910,
+      "deco" : "FhZh",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "h"
+       }
+      ],
+      "endline" : 928
+     },
+     {
+      "name" : "memoryAddress",
+      "kind" : "function",
+      "line" : 938,
+      "deco" : "FhZh",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "h"
+       }
+      ],
+      "endline" : 953
+     },
+     {
+      "name" : "memoryData",
+      "kind" : "function",
+      "line" : 961,
+      "deco" : "FZh",
+      "endline" : 966
+     },
+     {
+      "name" : "memoryData",
+      "kind" : "function",
+      "line" : 973,
+      "deco" : "FhZh",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "h"
+       }
+      ],
+      "endline" : 979
+     },
+     {
+      "name" : "writeSpriteRam",
+      "kind" : "function",
+      "line" : 981,
+      "deco" : "FhkZv",
+      "originalType" : "void(ubyte value, size_t address)",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "h"
+       },
+       {
+        "name" : "address",
+        "deco" : "k"
+       }
+      ],
+      "endline" : 984
+     },
+     {
+      "name" : "draw",
+      "kind" : "function",
+      "line" : 986,
+      "deco" : "FPS8derelict4sdl25types11SDL_SurfaceZv",
+      "parameters" : [
+       {
+        "name" : "display",
+        "deco" : "PS8derelict4sdl25types11SDL_Surface"
+       }
+      ],
+      "endline" : 1010,
+      "in" : {
+       "name" : "__require",
+       "kind" : "function",
+       "line" : 988,
+       "deco" : "FZv",
+       "endline" : 988
+      }
+     }
+    ]
+   },
+   {
+    "name" : "IPPU",
+    "kind" : "interface",
+    "line" : 1018,
+    "members" : [
+     {
+      "name" : "opIndex",
+      "kind" : "function",
+      "line" : 1020,
+      "storageClass" : [
+       "const",
+       "abstract"
+      ],
+      "deco" : "xFkZh",
+      "originalType" : "ubyte(size_t index)",
+      "parameters" : [
+       {
+        "name" : "index",
+        "deco" : "k"
+       }
+      ]
+     },
+     {
+      "name" : "opIndexAssign",
+      "kind" : "function",
+      "line" : 1021,
+      "storageClass" : [
+       "const",
+       "abstract"
+      ],
+      "deco" : "xFhkZh",
+      "originalType" : "ubyte(ubyte value, size_t index)",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "h"
+       },
+       {
+        "name" : "index",
+        "deco" : "k"
+       }
+      ]
+     },
+     {
+      "name" : "control",
+      "kind" : "function",
+      "line" : 1022,
+      "storageClass" : [
+       "abstract"
+      ],
+      "deco" : "FhZv",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "h"
+       }
+      ]
+     },
+     {
+      "name" : "mask",
+      "kind" : "function",
+      "line" : 1023,
+      "storageClass" : [
+       "abstract"
+      ],
+      "deco" : "FhZv",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "h"
+       }
+      ]
+     },
+     {
+      "name" : "status",
+      "kind" : "function",
+      "line" : 1024,
+      "storageClass" : [
+       "abstract"
+      ],
+      "deco" : "xFZh"
+     },
+     {
+      "name" : "spriteRAMAddress",
+      "kind" : "function",
+      "line" : 1025,
+      "storageClass" : [
+       "abstract"
+      ],
+      "deco" : "FhZh",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "h"
+       }
+      ]
+     },
+     {
+      "name" : "spriteRAMValue",
+      "kind" : "function",
+      "line" : 1026,
+      "storageClass" : [
+       "abstract"
+      ],
+      "deco" : "FhZh",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "h"
+       }
+      ]
+     },
+     {
+      "name" : "scroll",
+      "kind" : "function",
+      "line" : 1027,
+      "storageClass" : [
+       "abstract"
+      ],
+      "deco" : "FhZh",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "h"
+       }
+      ]
+     },
+     {
+      "name" : "memoryAddress",
+      "kind" : "function",
+      "line" : 1028,
+      "storageClass" : [
+       "abstract"
+      ],
+      "deco" : "FhZh",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "h"
+       }
+      ]
+     },
+     {
+      "name" : "memoryData",
+      "kind" : "function",
+      "line" : 1029,
+      "storageClass" : [
+       "abstract"
+      ],
+      "deco" : "FZh"
+     },
+     {
+      "name" : "memoryData",
+      "kind" : "function",
+      "line" : 1030,
+      "storageClass" : [
+       "abstract"
+      ],
+      "deco" : "FhZh",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "h"
+       }
+      ]
+     },
+     {
+      "name" : "writeSpriteRam",
+      "kind" : "function",
+      "line" : 1031,
+      "storageClass" : [
+       "abstract"
+      ],
+      "deco" : "FhkZv",
+      "originalType" : "void(ubyte value, size_t address)",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "h"
+       },
+       {
+        "name" : "address",
+        "deco" : "k"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "name" : "_arrayExpSliceOrass_h",
+    "kind" : "function",
+    "deco" : "UNaNbNeAhhZAh",
+    "parameters" : [
+     {
+      "name" : "p1",
+      "deco" : "Ah"
+     },
+     {
+      "name" : "c0",
+      "deco" : "h"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "name" : "file.rom",
+  "kind" : "module",
+  "file" : "..\\nested\\file\\rom.d",
+  "members" : [
+   {
+    "name" : "Mirroring",
+    "kind" : "enum",
+    "line" : 22,
+    "baseDeco" : "i",
+    "members" : [
+     {
+      "name" : "VERTICAL",
+      "kind" : "enum member",
+      "line" : 24
+     },
+     {
+      "name" : "HORIZONTAL",
+      "kind" : "enum member",
+      "line" : 25
+     },
+     {
+      "name" : "FOUR_SCREEN",
+      "kind" : "enum member",
+      "line" : 26
+     }
+    ]
+   },
+   {
+    "name" : "Rom",
+    "kind" : "struct",
+    "line" : 29,
+    "members" : [
+     {
+      "name" : "mapper",
+      "kind" : "variable",
+      "line" : 31,
+      "deco" : "h",
+      "offset" : 0
+     },
+     {
+      "name" : "battery",
+      "kind" : "variable",
+      "line" : 32,
+      "deco" : "b",
+      "offset" : 1
+     },
+     {
+      "name" : "mirroring",
+      "kind" : "variable",
+      "line" : 33,
+      "deco" : "E4file3rom9Mirroring",
+      "offset" : 4
+     },
+     {
+      "name" : "trainer",
+      "kind" : "variable",
+      "line" : 34,
+      "deco" : "Ah",
+      "offset" : 8
+     },
+     {
+      "name" : "prg",
+      "kind" : "variable",
+      "line" : 35,
+      "deco" : "Ah",
+      "offset" : 16
+     },
+     {
+      "name" : "chr",
+      "kind" : "variable",
+      "line" : 36,
+      "deco" : "Ah",
+      "offset" : 24
+     }
+    ]
+   }
+  ]
+ }
+]

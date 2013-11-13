@@ -1,0 +1,11 @@
+<DProject>
+ <ProjectGuid>c83ee892-f697-4a08-aa7e-33aa815900a8</ProjectGuid>
+ <Config name="Debug">
+  <!-- default to defaults -->
+ </Config>
+ <Config name="Release">
+  </Config>
+ <Folder name="cputest">
+  <File path="main.d" />
+ </Folder>
+</DProject>

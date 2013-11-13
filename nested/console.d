@@ -37,31 +37,34 @@ protected:
 
 public:
     abstract void createCPU();
-    abstract void createDisplay();
+    abstract void createDisplay(SDL_Surface*);
 
     Console createConsole(SDL_Surface* display)
     {
         console = new Console;
         createCPU();
         createDisplay(display);
+
+        return console;
     }
 }
 
 final class PalConsoleBuilder : ConsoleBuilder
 {
-    enum PAL_CPU_FREQUENCY = 1_662_607;
+    enum PAL_CPU_FREQUENCY = 1_662_607; // Hz
 public:
     override void createCPU()
     {
-        Console console = new Console;
-        console.cpu     = new CPU;        
-        console.cyclesPerFrame = PAL_CPU_FREQUENCY / 50;
+        console.cpu             = new CPU;
+        console.frequency       = 50;
+        console.cyclesPerFrame  = PAL_CPU_FREQUENCY / console.frequency;
     }
 
     override void createDisplay(SDL_Surface* display)
     {
         console.ppu     = new PPU;
         console.display = display;
+        console.cpu.setPPU(console.ppu);
     }
 }
 
@@ -82,6 +85,8 @@ final class Console
 
     /// Cycles per frame
     int cyclesPerFrame;
+
+    int frequency;
 
     void initJoystick()
     {
@@ -134,6 +139,7 @@ public:
                 throw new Exception("ROM too big");
         }
         cpu.getMemoryMap().loadPrgRom(first, second);
+        cpu.setPC(0xC000);
     }
 
     void handleJoystickAxisEvent(const ref SDL_Event event)

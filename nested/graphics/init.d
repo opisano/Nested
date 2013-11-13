@@ -19,7 +19,12 @@
 
 module graphics.init;
 
-import derelict.sdl.sdl;
+import std.exception;
+
+import derelict.sdl2.sdl;
+
+import common;
+
 
 
 enum SCREEN_WIDTH  = 256;
@@ -37,35 +42,30 @@ public:
 /**
  * Display of the application
  */
-final class Display
+final class Display : IDisposable
 {
-    SDL_Surface* display;
+    SDL_Window* window;
+    SDL_Renderer* renderer;
     
 public:
-    this(int factor)
-    in
+    this()
     {
-        assert (factor >= 1 && factor <= 4);
-    }
-    body
-    {
-        const int w = SCREEN_WIDTH * factor;
-        const int h = SCREEN_HEIGHT * factor;
+        // Create our application window and renderer
+        window = SDL_CreateWindow("Nested",
+                                    SDL_WINDOWPOS_UNDEFINED,
+                                    SDL_WINDOWPOS_UNDEFINED,
+                                    640, 480,
+                                    0);
+        enforce(window !is null, "SDL_CreateWindow failed");
+        renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+        enforce(renderer !is null, "SDL_CreateRenderer failed");
+        SDL_ShowWindow(window);
 
-
-        display = SDL_SetVideoMode(w, h, 32, SDL_SWSURFACE);
-        if (display == null)
-        {
-            throw new GraphicsException("Cannot initialize video");
-        }
-        
-        SDL_WM_SetCaption("NESted", null);
     }
-    
-    
-    
-    void cleanup()
+
+    void dispose()
     {
-        SDL_FreeSurface(display);
+        SDL_DestroyRenderer(renderer);
+        SDL_DestroyWindow(window);
     }
 }

@@ -506,9 +506,17 @@ public:
     /**
      * Connects the CPU and the PPU
      */
-    void setPPU(IPPU ppu)
+    void setPPU(PPU ppu)
     {
         memory = new CPUMemoryMap(this, ppu);
+    }
+
+    /**
+     * Sets the program counter address.
+     */
+    void setPC(ushort pc)
+    {
+        this.pc = pc;
     }
 
     /**
