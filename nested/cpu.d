@@ -499,6 +499,7 @@ public:
 
     this()
     {
+        sp = 0xFD;
         // initialize the decoding table.
 		initDecoding();
     }
@@ -1357,8 +1358,8 @@ private:
      */
     void rts()
     {
-        pc = memory[0x1000 | ++sp];
-        pc += (memory[0x1000 | ++sp] << 8) + 1;
+        pc = memory[0x0100 | ++sp];
+        pc += (memory[0x0100 | ++sp] << 8);
     }
     
     /**
