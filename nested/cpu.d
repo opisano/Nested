@@ -438,7 +438,7 @@ private:
 
 		debug 
 		{
-			writefln("%04X\t%02X\t\tA:%02X X:%02X Y:%02X SP:%02X", pc, opcode, a, x, y, sp);
+			writefln("%02X\t\tA:%02X X:%02X Y:%02X SP:%02X", opcode,  a, x, y, sp);
 		}
 		
 		if (fp !is null)
@@ -546,6 +546,11 @@ public:
         {
             if (!interrupted()) // normal execution
             {
+                // Write PC
+                debug 
+                {
+                    writef("%04X  ", pc);
+                }
                 ubyte opcode = read_mem();
                 decode(opcode);
             }
@@ -737,6 +742,15 @@ private:
         else
         {
             flags &= ~NEGATIVE;
+        }
+
+        if (value & 0b0100_0000)
+        {
+            flags |= OVERFLOW;
+        }
+        else
+        {
+            flags &= ~OVERFLOW;
         }
         
         setSign(value);
