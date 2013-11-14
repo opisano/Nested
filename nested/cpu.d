@@ -1257,7 +1257,9 @@ private:
      */
     void pla()
     {
-        a = memory[0x1000 | ++sp];
+        a = memory[0x0100 | ++sp];
+        setZero(a);
+        setSign(a);
     }
     
     /**
