@@ -139,7 +139,6 @@ public:
                 throw new Exception("ROM too big");
         }
         cpu.getMemoryMap().loadPrgRom(first, second);
-        cpu.setPC(0xC000);
     }
 
     void handleJoystickAxisEvent(const ref SDL_Event event)
