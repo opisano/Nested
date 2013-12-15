@@ -26,13 +26,15 @@ import std.stdio;
 
 import memory;
 
+enum STACK = 0x0100;
+
 // Flag indices
 enum CARRY     = 0b0000_0001;
 enum ZERO      = 0b0000_0010;
 enum INTERRUPT = 0b0000_0100;
 enum DECIMAL   = 0b0000_1000;
 enum BREAK     = 0b0001_0000;
-
+enum UNUSED    = 0b0010_0000;
 enum OVERFLOW  = 0b0100_0000;
 enum NEGATIVE  = 0b1000_0000;
 
@@ -45,6 +47,10 @@ final class CPU
 private:
     uint cycles;
 
+    /**
+     * Sets the Z flag if value == 0, 
+     * clears it otherwise.
+     */
     void setZero(ubyte value)
     {
         if (value == 0)
@@ -57,18 +63,26 @@ private:
         }
     }
     
+    /**
+    * Sets the N flag if value MSB is set, 
+    * clears it otherwise.
+    */
     void setSign(ubyte value)
     {
-        if (a & 0b1000_0000)
+        if (value & NEGATIVE)
         {
             flags |= NEGATIVE;
         }
         else
         {
-            flags &= ~ NEGATIVE;
+            flags &= ~NEGATIVE;
         }
     }
     
+    /**
+    * Sets the C flag if value != 0, 
+    * clears it otherwise.
+    */
     void setCarry(int value)
     {
         if (value)
@@ -111,14 +125,9 @@ private:
     
     MemInfo absolute()
     {
-        ushort address = read_mem();
-        address |= read_mem() << 8;
-        
-        boundary_crossed = crossPage(pc, address);
-        
         MemInfo mi;
-        mi.address = address; 
-        mi.value   = memory[address];
+        mi.address = absolute_address(); 
+        mi.value   = memory[mi.address];
         
         return mi;
     }
@@ -144,8 +153,7 @@ private:
     
     MemInfo absolute_x()
     {
-        ushort address = read_mem();
-        address |= read_mem() << 8;
+        ushort address = absolute_address();
         address += x;
         
         boundary_crossed = crossPage(pc, address);
@@ -158,12 +166,10 @@ private:
     
     MemInfo absolute_y()
     {
-        ushort address = read_mem();
-        address |= read_mem() << 8;
+        ushort address = absolute_address();
         address += y;
         
         boundary_crossed = crossPage(pc, address);
-        
         MemInfo mi;
         mi.address = address;
         mi.value   = memory[address];
@@ -199,9 +205,7 @@ private:
     
     ushort absolute_indirect()
     {
-        ushort address = read_mem();
-        address |= read_mem() << 8;
-        
+        ushort address = absolute_address();        
         ushort result = memory[address];
         result |= memory[address+1] << 8;
         
@@ -438,7 +442,7 @@ private:
 
 		debug 
 		{
-			writefln("%02X\t\tA:%02X X:%02X Y:%02X SP:%02X", opcode,  a, x, y, sp);
+			writefln("%02X\t\tA:%02X X:%02X Y:%02X P:%02X SP:%02X", opcode,  a, x, y, flags, sp);
 		}
 		
 		if (fp !is null)
@@ -499,7 +503,10 @@ public:
 
     this()
     {
+        flags |= UNUSED;
+        flags |= INTERRUPT;
         sp = 0xFD;
+        reset = true;
         // initialize the decoding table.
 		initDecoding();
     }
@@ -517,6 +524,7 @@ public:
      */
     void setPC(ushort pc)
     {
+        reset = false;
         this.pc = pc;
     }
 
@@ -566,10 +574,6 @@ public:
 
                 // Set the interrupt disable flag
                 sei();
-
-				double d = 3.34;
-				int i = to!int(d);
-
                 ushort addr;
                 if (reset)
                 {
@@ -630,6 +634,21 @@ private:
         a = cast(ubyte) temp;
     }
     
+    unittest
+    {
+        auto cpu = new CPU();
+        cpu.a = 0;
+        cpu.adc(2);
+        assert (cpu.a == 2);
+        assert ((cpu.flags & CARRY) == 0);
+
+
+        cpu.a = 0;
+        cpu.flags |= CARRY;
+        cpu.adc(2);
+        assert(cpu.a == 3);
+        assert ((cpu.flags & CARRY) == 0);
+    }
     
     
     /**
@@ -643,6 +662,14 @@ private:
         a &= value;         
         setZero(a);
         setSign(a);
+    }
+
+    unittest
+    {
+        auto cpu = new CPU();
+        cpu.a = 0b1010;
+        cpu.and(0b1100);
+        assert (cpu.a == 0b1000);
     }
     
     /**
@@ -659,8 +686,7 @@ private:
     void asl()
     {
         setCarry(a & 0b1000_0000);        
-        a <<= 1;
-        
+        a = (a << 1) & 0xFE;        
         setZero(a);
         setSign(a);
     }
@@ -668,11 +694,20 @@ private:
     void asl(ushort address, ubyte value)
     {
         setCarry(value & 0b1000_0000);        
-        value <<= 1;
+        value = (value << 1) & 0xFE;
         memory[address] = value;
         
         setZero(value);
         setSign(value);
+    }
+
+    unittest
+    {
+        auto cpu = new CPU();
+        cpu.a = 0b1110_1110;
+        cpu.asl();
+        assert (cpu.a == 0b1101_1100);
+        assert (cpu.flags | CARRY);
     }
     
     /**
@@ -735,26 +770,8 @@ private:
     {
         ubyte temp = value & a;
         setZero(temp);
-        
-        if (value & 0b1000_0000)
-        {
-            flags |= NEGATIVE;
-        }
-        else
-        {
-            flags &= ~NEGATIVE;
-        }
-
-        if (value & 0b0100_0000)
-        {
-            flags |= OVERFLOW;
-        }
-        else
-        {
-            flags &= ~OVERFLOW;
-        }
-        
-        setSign(value);
+        setOverflow(value & 0b0100_0000);
+        setSign(value & 0b1000_0000);
     }
     
     /**
@@ -774,7 +791,7 @@ private:
     }
     
     /**
-     * BEQ - Branch if not Equal
+     * BNE - Branch if not Equal
      *
      * If the zero flag is clear then add the relative displacement to the 
      * program counter to cause a branch to a new location.
@@ -815,17 +832,18 @@ private:
      */
     void brk()
     {
-        pc++;
+        ++pc;
         
         // push the pc on the stack
-        memory[0x0100 | sp--] = cast(ubyte)(pc >> 8);
-        memory[0x0100 | sp--] = cast(ubyte)(pc);
+        memory[STACK | sp--] = cast(ubyte)(pc >> 8);
+        memory[STACK | sp--] = cast(ubyte)(pc);
         
-        // set the break flag 
-        flags |= BREAK;
-        
-        // push the status on the stack
+        // set the break flag on the copy
+        // pushed on the stack
+        ubyte save = flags;
+        flags |= BREAK;        
         php();
+        flags = save;
         
         // the IRQ interrupt vector at $FFFE/F is loaded into the PC
         pc =  memory[0xFFFE];
@@ -925,17 +943,30 @@ private:
         ubyte temp = cast(ubyte)(a - value);
         
         setSign(temp);
-        
         setZero(temp);
-        
-        if (a >= value)
-        {
-            flags |= CARRY;
-        }
-        else
-        {
-            flags &= ~CARRY;
-        }
+        setCarry(a >= value);
+    }
+
+    unittest
+    {
+        auto cpu = new CPU();
+        cpu.a = 100;
+        cpu.cmp(120);
+        assert (cpu.flags & NEGATIVE);
+        assert (!(cpu.flags & CARRY));
+        assert (!(cpu.flags & ZERO));
+
+        cpu.a = 100;
+        cpu.cmp(100);
+        assert (!(cpu.flags & NEGATIVE));
+        assert (cpu.flags & CARRY);
+        assert (cpu.flags & ZERO);
+
+        cpu.a = 200;
+        cpu.cmp(100);
+        assert (!(cpu.flags & NEGATIVE));
+        assert (cpu.flags & CARRY);
+        assert (!(cpu.flags & ZERO));
     }
     
     /**
@@ -953,15 +984,7 @@ private:
         // set negative flag
         setSign(temp);
         setZero(temp);
-        
-        if (a >= value)
-        {
-            flags |= CARRY;
-        }
-        else
-        {
-            flags &= ~CARRY;
-        }
+        setCarry(x >= value);
     }
     
     /**
@@ -972,20 +995,12 @@ private:
      */
     void cpy(ubyte value)
     {
-        ubyte temp = cast(ubyte)(x - value);
+        ubyte temp = cast(ubyte)(y - value);
         
         // set negative flag
         setSign(temp);
         setZero(temp);
-        
-        if (a >= value)
-        {
-            flags |= CARRY;
-        }
-        else
-        {
-            flags &= ~CARRY;
-        }
+        setCarry(y >= value);
     }
     
     /**
@@ -1014,8 +1029,7 @@ private:
      */
     void dex()
     {
-        x--;
-        
+        --x;
         setZero(x);
         setSign(x);
     }
@@ -1030,8 +1044,7 @@ private:
      */
     void dey()
     {
-        y--;
-        
+        --y;
         setZero(y);
         setSign(y);
     }
@@ -1047,7 +1060,6 @@ private:
     void eor(ubyte value)
     {
         a ^= value;
-        
         setZero(a);
         setSign(a);
     }
@@ -1079,8 +1091,7 @@ private:
      */
     void inx()
     {
-        x++;
-        
+        ++x;
         setZero(x);
         setSign(x);
     }
@@ -1095,8 +1106,7 @@ private:
      */
     void iny()
     {
-        y++;
-        
+        ++y;
         setZero(y);
         setSign(y);
     }
@@ -1125,9 +1135,10 @@ private:
     void jsr(ushort address)
     {
         ushort temp = cast(ushort)(pc - 1);
-        memory[0x0100 | sp--] = cast(ubyte)(pc >> 8);
-        memory[0x0100 | sp--] = cast(ubyte)(pc);
-        
+        memory[STACK | sp] = cast(ubyte)(pc >> 8);
+        --sp;
+        memory[STACK | sp] = cast(ubyte)(pc);
+        --sp;        
         pc = address;
     }
     
@@ -1187,18 +1198,16 @@ private:
     void lsr()
     {
         setCarry(a & 1);
-        flags &= ~NEGATIVE;
-        
-        a >>= 1;
+        flags &= ~NEGATIVE;        
+        a  = (a >> 1) & 0x7F;
         setZero(a);
     }
     
     void lsr(ushort address, ubyte value)
     {
         setCarry(value & 1);
-        flags &= ~NEGATIVE;
-        
-        value >>= 1;
+        flags &= ~NEGATIVE;        
+        value = (value >> 1) & 0x7F;
         memory[address] = value;
         setZero(value);
     }
@@ -1213,8 +1222,7 @@ private:
      */
     void ora(ubyte value)
     {
-        a |= value;
-        
+        a |= value;        
         setZero(a);
         setSign(a);
     }
@@ -1236,7 +1244,8 @@ private:
      */
     void pha()
     {
-        memory[0x0100 | sp--] = a;
+        memory[STACK | sp] = a;
+        --sp;
     }
     
     /**
@@ -1246,7 +1255,8 @@ private:
      */
     void php()
     {
-        memory[0x0100 | sp--] = flags;
+        memory[STACK | sp] = flags;
+        --sp;
     }
     
     /**
@@ -1257,7 +1267,8 @@ private:
      */
     void pla()
     {
-        a = memory[0x0100 | ++sp];
+        ++sp;
+        a = memory[STACK | sp];
         setZero(a);
         setSign(a);
     }
@@ -1270,7 +1281,8 @@ private:
      */
     void plp()
     {
-        flags = memory[0x1000 | ++sp];
+        ++sp;
+        flags = (memory[STACK | sp] | UNUSED);
     }
     
     /**
@@ -1283,7 +1295,7 @@ private:
     void rol()
     {
         ubyte temp = a & 0b1000_0000;
-        a <<= 1;
+        a = (a << 1) & 0xFE;
         if (flags & CARRY)
             a++;
         setCarry(temp);
@@ -1294,7 +1306,7 @@ private:
     void rol(ushort address, ubyte value)
     {
         ubyte temp = value & 0b1000_0000;
-        value <<= 1;
+        value = (value << 1) & 0xFE;
         if (flags & CARRY)
             value++;
         
@@ -1315,7 +1327,7 @@ private:
     void ror()
     {
         int carry = a & 1;
-        a >>= 1;
+        a = (a >> 1) & 0x7F;
         if (flags & CARRY)
             a |=  0b1000_0000;
         setCarry(carry);
@@ -1326,7 +1338,7 @@ private:
     void ror(ushort address, ubyte value)
     {
         int carry = value & 1;
-        value >>= 1;
+        value = (value >> 1) & 0x7F;
         if (flags & CARRY)
             value |=  0b1000_0000;
         
@@ -1345,10 +1357,10 @@ private:
      * program counter.
      */
     void rti()
-    {
+    {        
         plp();
-        pc = memory[0x1000 | ++sp];
-        pc |= memory[0x1000 | ++sp] << 8;
+        pc = memory[STACK | ++sp];
+        pc |= memory[STACK | ++sp] << 8;
     }
     
     /**
@@ -1360,8 +1372,8 @@ private:
      */
     void rts()
     {
-        pc = memory[0x0100 | ++sp];
-        pc += (memory[0x0100 | ++sp] << 8);
+        pc = memory[STACK | ++sp];
+        pc += (memory[STACK | ++sp] << 8);
     }
     
     /**
@@ -1444,9 +1456,16 @@ private:
      * Stores the contents of the accumulator into memory.
      */
     void sta(ushort address)
+    out
     {
+        assert (memory[address] == a);
+    }
+    body
+    {
+        //debug { writefln("Storing A (%X) at address %04X", a, address); }
         memory[address] = a;
     }
+    
     
     /**
      * STX - Store X
@@ -1456,7 +1475,13 @@ private:
      * Stores the contents of the X register into memory.
      */    
     void stx(ushort address)
+    out
     {
+        assert (memory[address] == x);
+    }
+    body
+    {
+        //debug { writefln("Storing X (%X) at address %04X", x, address); }
         memory[address] = x;
     }
     
@@ -1468,6 +1493,11 @@ private:
      * Stores the contents of the Y register into memory.
      */
     void sty(ushort address)
+    out
+    {
+        assert (memory[address] == y);
+    }
+    body
     {
         memory[address] = y;
     }
@@ -1481,6 +1511,11 @@ private:
      * sets the zero and negative flags as appropriate.
      */
     void tax()
+    out
+    {
+        assert (x == a);
+    }
+    body
     {
         x = a;
         setZero(x);
@@ -1496,6 +1531,11 @@ private:
      * sets the zero and negative flags as appropriate.
      */
     void tay()
+    out
+    {
+        assert (y == a);
+    }
+    body
     {
         y = a;
         setZero(y);
@@ -1511,6 +1551,11 @@ private:
      * and sets the zero and negative flags as appropriate.
      */
     void tsx()
+    out
+    {
+        assert (x == sp);
+    }
+    body
     {
         x = sp;
         setZero(x);
@@ -1526,6 +1571,11 @@ private:
      * sets the zero and negative flags as appropriate.
      */
     void txa()
+    out
+    {
+        assert (a == x);
+    }
+    body
     {
         a = x;
         setZero(a);
@@ -1540,6 +1590,11 @@ private:
      * Copies the current contents of the X register into the stack register.
      */
     void txs()
+    out
+    {
+        assert (sp == x);
+    }
+    body
     {
         sp = x;
     }
@@ -1553,6 +1608,11 @@ private:
      * sets the zero and negative flags as appropriate.
      */
     void tya()
+    out
+    {
+        assert (a == y);
+    }
+    body
     {
         a = y;
         setZero(a);
