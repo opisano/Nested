@@ -55,17 +55,26 @@ void main(string[] argv)
     auto builder = new PalConsoleBuilder;
     auto console = builder.createConsole(screen);
     console.loadGame("nestest.nes");
-    while (1)
+    console.cpu.setPC(0xC000);
+
+    try
     {
-        auto start = SDL_GetTicks();
-        console.tick();
-        SDL_UpdateTexture(texture, null, (*screen).pixels, (*screen).pitch);
-        SDL_RenderClear(renderer);
-        SDL_RenderCopy(renderer, texture, null, null);
-        SDL_RenderPresent(renderer);
+        while (1)
+        {
+            auto start = SDL_GetTicks();
+            console.tick();
+            SDL_UpdateTexture(texture, null, (*screen).pixels, (*screen).pitch);
+            SDL_RenderClear(renderer);
+            SDL_RenderCopy(renderer, texture, null, null);
+            SDL_RenderPresent(renderer);
 
-        auto end = SDL_GetTicks();
+            auto end = SDL_GetTicks();
 
-        SDL_Delay(17 - (end - start));
+            SDL_Delay(17 - (end - start));
+        }
+    }
+    catch (Exception e)
+    {
+        // DO Nothing
     }
 }

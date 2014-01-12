@@ -1,5 +1,5 @@
 /*------------------------------------------------------------------------------
-    Copyright© 2010-2013 Olivier Pisano
+    Copyright© 2010-2014 Olivier Pisano
     Copyright© 2003 Maxim Stepin ( maxst@hiend3d.com )
     Copyright© 2010 Cameron Zemek ( grom@zeminvaders.net)
 

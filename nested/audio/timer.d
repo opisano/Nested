@@ -1,5 +1,5 @@
 /*------------------------------------------------------------------------------
-    Copyright© 2010-2013 Olivier Pisano    
+    Copyright© 2010-2014 Olivier Pisano    
     
     This file is part of Nested.
 
